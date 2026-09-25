@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kits Festa | Pão & Tradição</title>
+<meta name="description" content="Kits Festa da Pão & Tradição: tortas, docinhos, salgados e bebidas para o seu aniversário ou evento. Escolha o kit, personalize e envie o pedido pelo WhatsApp.">
+<meta name="theme-color" content="#FDFBF5">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kits Festa | Pão & Tradição">
+<meta property="og:description" content="Escolha o kit, aumente a festa com adicionais e envie seu pedido pelo WhatsApp.">
+<meta property="og:url" content="https://padariapaoetradicao.com.br/kitfesta/">
+<meta property="og:image" content="https://padariapaoetradicao.com.br/img/compartilhar.jpg">
+<script>
+if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) {
+  document.querySelector('meta[name="viewport"]').setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1");
+}
+</script>
+<link rel="canonical" href="https://padariapaoetradicao.com.br/kitfesta/">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<script>
+/* =====================================================================
+   AREA DE EDICAO
+   Kits, adicionais e precos. Edite so o texto e os numeros.
+   Precos com ponto no lugar da virgula (ex.: 125.50).
+   ===================================================================== */
+const WPP = "5522999631850";
+const SITE = "../";
+
+const kits = [
+  {
+    id: 1, nome: "Kit Festa Baby", preco: 100,
+    serve: "Serve até 5 pessoas",
+    desc: "Perfeito para comemorações mais intimistas, como aniversários, mesversários e chás de bebê em família. Um mimo especial para celebrar cada momento único.",
+    aviso: "O sabor da torta, dos docinhos e dos mini salgadinhos é escolhido por você!",
+    itens: ["1 torta de 700g", "15 docinhos", "30 mini salgadinhos", "1 Coca-Cola 2L"]
+  },
+  {
+    id: 2, nome: "Kit Festa 1", preco: 170,
+    serve: "Serve até 10 pessoas",
+    desc: "Ideal para reunir os mais chegados em uma festa descontraída e saborosa. Ótima opção para aniversários, formaturas e celebrações em geral.",
+    aviso: "O sabor da torta, dos docinhos e dos mini salgadinhos é escolhido por você!",
+    itens: ["1 torta 1,2kg", "24 docinhos", "50 mini salgadinhos", "1 Guaraná Antarctica 2L", "1 Coca-Cola 2L"]
+  },
+  {
+    id: 3, nome: "Kit Festa 2", preco: 270,
+    serve: "Serve de 15 a 20 pessoas",
+    desc: "Para quem quer uma festa completa e bem servida. Combina doces, salgados e bebidas para deixar seus convidados satisfeitos do início ao fim.",
+    aviso: "O sabor da torta, dos docinhos, dos pasteizinhos e dos mini salgadinhos é escolhido por você!",
+    itens: ["1 torta de 1,5kg", "40 docinhos", "50 pasteizinhos", "30 mini salgadinhos", "2 Coca-Colas 2L", "1 Guaraná Antarctica 2L"]
+  },
+  {
+    id: 4, nome: "Kit Festa 3", preco: 370,
+    serve: "Serve até 25 pessoas",
+    desc: "O kit mais completo da casa! Perfeito para grandes comemorações, com torta doce e salgada, muitos docinhos e salgadinhos para agradar a todos os paladares.",
+    aviso: "O sabor das tortas, dos docinhos e dos mini salgadinhos é escolhido por você!",
+    itens: ["1 torta de 2kg", "1 torta salgada de 1,5kg", "60 docinhos", "100 mini salgadinhos", "3 Coca-Colas 2L", "2 Guaranás Antarctica 2L"]
+  }
+];
+
+// unidade "" = tortas (escolhe com + e -); "/ 100g" = digita em gramas; "/ und" = digita a quantidade
+const adicionais = [
+  { id: "a1", nome: "Torta salgada (meia receita)", preco: 125.00, unidade: "" },
+  { id: "a2", nome: "Torta salgada (receita inteira)", preco: 225.00, unidade: "" },
+  { id: "a10", nome: "Cento de mini salgados", preco: 79.90, unidade: "" },
+  { id: "a3", nome: "Docinhos de festa", preco: 5.99, unidade: "/ 100g" },
+  { id: "a4", nome: "Mini hamburguinho", preco: 2.50, unidade: "/ und" },
+  { id: "a5", nome: "Mini pasteizinhos", preco: 5.49, unidade: "/ 100g" },
+  { id: "a6", nome: "Mini salgadinhos", preco: 4.90, unidade: "/ 100g" },
+  { id: "a7", nome: "Mini croissant", preco: 4.90, unidade: "/ 100g" },
+  { id: "a8", nome: "Coiozinho", preco: 0.60, unidade: "/ und" },
+  { id: "a9", nome: "Careca", preco: 0.80, unidade: "/ und" }
+];
+
+// Foto do topo: a mesma escolhida no painel do site (Foto do Kits Festa)
+const FIREBASE = { apiKey: "AIzaSyAbWca-fYMQgvQl7otkHZibptOox1NTFN4", projectId: "planner-c01a1" };
+const FOTO_PADRAO = "../img/mini-salgados.webp";
+/* ===================== FIM DA AREA DE EDICAO ===================== */
+</script>
+
+<style>
+:root{
+  --azul:#13215E;--dourado:#EFAD4C;--creme:#F5F0DC;--fundo:#FDFBF5;--branco:#fff;
+  --tinta-suave:#5A6283;--linha:rgba(19,33,94,.12);--erro:#B23B3B;
+  --serif:'Bodoni Moda','Didot','Bodoni 72',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:var(--sans);font-size:1rem;line-height:1.55;color:var(--azul);background:var(--fundo);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--dourado);outline-offset:2px;border-radius:6px}
+h1,h2,h3,h4,.serif{font-family:var(--serif);font-weight:600;line-height:1.1;font-optical-sizing:none;font-variation-settings:"opsz" 11}
+.conteiner{width:100%;max-width:1120px;margin:0 auto;padding:0 1.25rem}
+.oculto{display:none !important}
+
+/* botoes */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;min-height:48px;padding:0 1.4rem;border-radius:999px;border:0;font-weight:600;font-size:.95rem;text-decoration:none;cursor:pointer;transition:background-color .2s,border-color .2s,color .2s}
+.btn svg{width:18px;height:18px;flex-shrink:0}
+.btn-azul{background:var(--azul);color:var(--creme)}
+.btn-azul:hover{background:#1D2E7C}
+.btn-ouro{background:var(--dourado);color:var(--azul)}
+.btn-ouro:hover{background:#F4BD6A}
+.btn-contorno{background:transparent;border:1.5px solid rgba(19,33,94,.2);color:var(--azul)}
+.btn-contorno:hover{border-color:var(--azul)}
+
+/* cabecalho */
+.cabecalho{position:sticky;top:0;z-index:20;background:rgba(253,251,245,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
+.cabecalho .conteiner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
+.marca img{height:48px;width:auto}
+.cab-link{font-size:.9rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;color:var(--tinta-suave)}
+.cab-link:hover{color:var(--azul)}
+.cab-link svg{width:16px;height:16px}
+
+/* topo */
+.hero{padding:1.75rem 0 2.5rem;position:relative;overflow:hidden}
+.hero .conteiner{position:relative;z-index:1}
+.granulado{position:absolute;inset:0;z-index:0;pointer-events:none}
+.granulado i{position:absolute;width:10px;height:3.5px;border-radius:3px;opacity:0;animation:cair .9s cubic-bezier(.2,.8,.3,1) forwards,flutuar var(--d) ease-in-out infinite alternate}
+@keyframes flutuar{from{transform:translate(0,0) rotate(var(--r))}to{transform:translate(var(--dx),var(--dy)) rotate(calc(var(--r) + var(--dr)))}}
+@keyframes cair{from{opacity:0;transform:translateY(-14px) rotate(var(--r0))}to{opacity:var(--o);transform:translateY(0) rotate(var(--r))}}
+.selo-giro{position:absolute;left:-10%;bottom:-6%;width:40%;aspect-ratio:1;border-radius:50%;background:var(--azul);display:none;place-items:center;box-shadow:0 10px 30px rgba(19,33,94,.25)}
+.selo-giro svg{position:absolute;inset:0;width:100%;height:100%;animation:girar 28s linear infinite}
+.selo-giro text{font-family:var(--sans);font-size:8.6px;font-weight:600;letter-spacing:.2em;fill:var(--dourado);text-transform:uppercase}
+.selo-centro{position:relative;display:grid;justify-items:center;line-height:1}
+.selo-centro small{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dourado);margin-bottom:.15rem}
+.selo-giro b{font-family:var(--serif);font-size:1.45rem;line-height:1;color:var(--creme);font-optical-sizing:none;font-variation-settings:"opsz" 11;font-weight:600}
+@keyframes girar{to{transform:rotate(360deg)}}
+#confete{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90}
+.pulo{animation:pulo .45s ease}
+@keyframes pulo{40%{transform:scale(1.12)}}
+.hero-grade{display:grid;grid-template-columns:1fr auto;grid-template-areas:"titulo foto" "texto texto" "passos passos" "aviso aviso";column-gap:1rem;align-items:center}
+.hero h1{grid-area:titulo;font-size:2.4rem}
+.hero-sub{grid-area:texto;color:var(--tinta-suave);margin-top:1rem;font-size:.98rem;max-width:46ch}
+.hero-foto{grid-area:foto;position:relative;width:clamp(110px,30vw,150px);aspect-ratio:1}
+.aro{position:absolute;inset:0;border-radius:50%;border:4px solid var(--dourado)}
+.aro::before{content:"";position:absolute;inset:4px;border-radius:50%;border:1.5px solid var(--azul)}
+.hero-foto img{position:absolute;inset:11px;width:calc(100% - 22px);height:calc(100% - 22px);border-radius:50%;object-fit:cover;background:var(--creme)}
+.passos{grid-area:passos;list-style:none;display:grid;gap:.7rem;margin-top:1.4rem}
+.passos li{display:flex;gap:.75rem;align-items:flex-start;font-weight:600;line-height:1.3}
+.passos li small{display:block;font-weight:400;font-size:.88rem;color:var(--tinta-suave);margin-top:.1rem}
+.passos li small strong{font-weight:600;color:var(--azul)}
+.passos span{width:26px;height:26px;border-radius:50%;background:var(--azul);color:var(--dourado);display:grid;place-items:center;font-size:.8rem;flex-shrink:0}
+.aviso-24{grid-area:aviso;display:flex;gap:.7rem;align-items:center;margin-top:1.5rem;padding:.85rem 1rem;background:var(--branco);border:1px solid var(--linha);border-radius:16px;font-size:.9rem}
+.aviso-24 svg{width:20px;height:20px;flex-shrink:0;color:var(--dourado)}
+
+/* kits */
+.secao{padding:2.5rem 0 7rem}
+#kits{background:var(--creme);border-radius:28px 28px 0 0}
+.titulo-secao{margin-bottom:1.5rem}
+.titulo-secao h2{font-size:1.9rem}
+.titulo-secao p{color:var(--tinta-suave);margin-top:.35rem;font-size:.95rem}
+.kits-grade{display:grid;gap:1rem}
+.kit{background:var(--branco);border:1.5px solid var(--linha);border-radius:24px;padding:1.4rem 1.3rem;display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s}
+.kit.selecionado{border-color:var(--azul);box-shadow:0 0 0 1px var(--azul)}
+.kit-topo{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.kit h3{font-size:1.5rem}
+.kit-serve{align-self:flex-start;white-space:nowrap;margin-top:.6rem;font-size:.8rem;font-weight:600;background:var(--creme);padding:3px 10px;border-radius:999px}
+.kit-preco{font-family:var(--serif);font-weight:600;font-size:1.5rem;white-space:nowrap;border-bottom:3px solid var(--dourado);line-height:1.2;font-optical-sizing:none;font-variation-settings:"opsz" 11}
+.kit-desc{font-size:.9rem;color:var(--tinta-suave);margin-top:.9rem}
+.kit-itens{list-style:none;margin-top:1rem;display:grid;gap:.15rem}
+.kit-itens li{display:flex;align-items:center;gap:.6rem;font-size:.92rem;padding:.3rem 0;border-bottom:1px solid var(--linha)}
+.kit-itens li:last-child{border-bottom:0}
+.kit-itens li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--dourado);flex-shrink:0}
+.kit-sabor{margin:.9rem 0 1.2rem;font-size:.85rem;background:var(--fundo);border-radius:12px;padding:.6rem .8rem;color:var(--tinta-suave)}
+.kit .btn{margin-top:auto;width:100%}
+.kit-rodape{margin-top:1.2rem}
+.kit.selecionado .btn{background:var(--dourado);color:var(--azul)}
+.kit.selecionado .btn:hover{background:#F4BD6A}
+
+/* barra do pedido */
+.barra-pedido{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:.6rem .9rem calc(.6rem + env(safe-area-inset-bottom,0px));background:rgba(253,251,245,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--linha);transform:translateY(calc(100% + 3rem));transition:transform .3s ease}
+.barra-pedido.visivel{transform:none}
+.barra-pedido .btn{width:100%;justify-content:space-between;min-height:50px;padding:0 1.3rem}
+.barra-pedido .btn span:last-child{font-family:var(--serif);font-size:1.15rem;font-optical-sizing:none;font-variation-settings:"opsz" 11}
+
+/* janelas */
+.fundo-modal{position:fixed;inset:0;background:rgba(19,33,94,.45);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.fundo-modal.aberto{display:flex}
+.janela{background:var(--fundo);width:100%;max-width:540px;max-height:92vh;overflow-y:auto;overscroll-behavior:contain;border-radius:24px 24px 0 0;padding:1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom,0px))}
+.janela-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem}
+.janela h3{font-size:1.6rem}
+.janela-sub{font-size:.9rem;color:var(--tinta-suave);margin-top:.25rem}
+.fechar{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--linha);background:var(--branco);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+.fechar svg{width:18px;height:18px}
+
+/* adicionais */
+.extra{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.75rem .2rem;border-bottom:1px solid var(--linha)}
+.extra.sel{background:linear-gradient(90deg,rgba(239,173,76,.14),transparent)}
+.extra-nome{font-weight:600;font-size:.92rem;line-height:1.3}
+.extra-preco{font-size:.82rem;color:var(--tinta-suave);margin-top:.1rem}
+.qtd{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.qtd button{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(19,33,94,.25);background:var(--branco);cursor:pointer;display:grid;place-items:center;font-size:1.1rem;line-height:1;color:var(--azul)}
+.qtd button:hover{border-color:var(--azul)}
+.qtd span{min-width:20px;text-align:center;font-weight:600}
+.digitar{display:flex;align-items:center;gap:.35rem;flex-shrink:0;background:var(--branco);border:1.5px solid rgba(19,33,94,.25);border-radius:12px;padding:0 .7rem 0 .2rem;height:42px}
+.digitar:focus-within{border-color:var(--azul)}
+.digitar input{width:62px;border:0;background:transparent;font-size:16px;font-weight:600;text-align:right;padding:0 .2rem;outline:none}
+.digitar span{font-size:.85rem;color:var(--tinta-suave);width:1.75rem}
+.resumo-direita .digitar{height:38px}
+.resumo-direita .digitar input{width:54px}
+.total-barra{display:flex;justify-content:space-between;align-items:center;background:var(--azul);color:var(--creme);padding:.9rem 1.1rem;border-radius:16px;margin-top:1.2rem;font-weight:600}
+.total-barra strong{font-family:var(--serif);font-size:1.3rem;color:var(--dourado);font-optical-sizing:none;font-variation-settings:"opsz" 11}
+.acoes{display:grid;grid-template-columns:1fr 1.3fr;gap:.6rem;margin-top:.8rem}
+
+/* resumo do pedido */
+.resumo{background:var(--branco);border:1px solid var(--linha);border-radius:18px;padding:.4rem 1rem}
+.resumo-linha{display:flex;justify-content:space-between;gap:.8rem;padding:.8rem 0;border-bottom:1px solid var(--linha)}
+.resumo-linha:last-child{border-bottom:0}
+.resumo-nome{font-weight:600}
+.resumo-itens{font-size:.82rem;color:var(--tinta-suave);margin-top:.2rem}
+.resumo-direita{display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0}
+.resumo-valor{font-weight:600;font-size:.92rem;white-space:nowrap}
+.resumo-direita .qtd button{width:30px;height:30px;font-size:1rem}
+.remover{background:none;border:0;cursor:pointer;color:var(--erro);font-size:.8rem;font-weight:600;padding:2px 0}
+.resumo-titulo{font-size:.8rem;font-weight:600;color:var(--tinta-suave);padding-top:.8rem}
+.total-linha{display:flex;justify-content:space-between;align-items:baseline;margin:1rem .2rem 0;font-weight:600}
+.total-linha strong{font-family:var(--serif);font-size:1.6rem;border-bottom:3px solid var(--dourado);font-optical-sizing:none;font-variation-settings:"opsz" 11}
+.agradecimento{background:var(--creme);border-radius:16px;padding:1rem 1.1rem;margin:1.4rem 0 1.2rem;font-size:.9rem;line-height:1.55}
+.agradecimento strong{display:block;font-family:var(--serif);font-size:1.15rem;margin-bottom:.2rem;font-optical-sizing:none;font-variation-settings:"opsz" 11}
+
+/* formulario */
+.campo{margin-bottom:1rem}
+.campo > label,.campo-rotulo{display:block;font-size:.85rem;font-weight:600;margin-bottom:.35rem}
+.campo input,.campo textarea{width:100%;min-height:48px;padding:.65rem .9rem;border:1.5px solid rgba(19,33,94,.2);border-radius:12px;background:var(--branco);font-size:1rem}
+.campo input:focus{border-color:var(--azul);outline:none}
+.opcoes{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.opcao{min-height:48px;padding:.5rem .6rem;border:1.5px solid rgba(19,33,94,.2);border-radius:12px;background:var(--branco);cursor:pointer;font-size:.9rem;font-weight:600;line-height:1.25;text-align:center}
+.opcao:hover{border-color:var(--azul)}
+.opcao.sel{background:var(--azul);border-color:var(--azul);color:var(--creme)}
+.lgpd{display:flex;gap:.7rem;align-items:flex-start;padding:.8rem .9rem;border:1.5px solid rgba(19,33,94,.2);border-radius:12px;background:var(--branco);cursor:pointer;font-size:.82rem;color:var(--tinta-suave);line-height:1.45;margin-top:.4rem}
+.lgpd input{font-size:16px;width:20px;height:20px;accent-color:var(--azul);flex-shrink:0;margin-top:1px}
+.lgpd.marcado{border-color:var(--azul)}
+.dica{font-size:.82rem;color:var(--tinta-suave);margin-top:.35rem}
+.dica.erro{color:var(--erro);font-weight:600}
+.erro-texto{font-size:.8rem;color:var(--erro);margin-top:.35rem}
+.btn-enviar{width:100%;margin-top:1.1rem;min-height:52px;font-size:1rem}
+
+/* avisos centrais */
+.caixa{background:var(--fundo);border-radius:24px;padding:2rem 1.6rem;width:calc(100% - 2rem);max-width:380px;text-align:center;margin:auto}
+.caixa-icone{width:56px;height:56px;border-radius:50%;background:var(--creme);display:grid;place-items:center;margin:0 auto 1rem}
+.caixa-icone svg{width:26px;height:26px}
+.caixa h4{font-size:1.5rem;margin-bottom:.5rem}
+.caixa p{font-size:.92rem;color:var(--tinta-suave);margin-bottom:1.4rem}
+.caixa .btn{width:100%}
+.centro{align-items:center}
+
+.toast{position:fixed;left:50%;bottom:calc(5.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--azul);color:var(--creme);padding:.8rem 1.2rem;border-radius:999px;font-size:.9rem;z-index:80;box-shadow:0 10px 30px rgba(19,33,94,.3);width:max-content;max-width:calc(100% - 2rem);text-align:center}
+
+/* rodape */
+.rodape{background:var(--azul);color:rgba(245,240,220,.75);padding:2rem 0 calc(6rem + env(safe-area-inset-bottom,0px));font-size:.88rem}
+.rodape .conteiner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1rem 1.5rem;text-align:center}
+.rodape img{width:72px;height:auto}
+.rodape a{color:var(--creme);text-decoration:none}
+.rodape a:hover{color:var(--dourado)}
+.rodape .copy{flex-basis:100%}
+
+@media (min-width:720px){
+  .hero{padding:3rem 0 3.5rem}
+  .hero-grade{grid-template-columns:1.2fr .8fr;grid-template-areas:"titulo foto" "texto foto" "passos foto" "aviso aviso";column-gap:3rem}
+  .hero h1{font-size:3.4rem;align-self:end}
+  .hero-sub{font-size:1.05rem}
+  .hero-foto{width:min(32vw,340px);justify-self:end}
+  .aro{border-width:6px}.aro::before{inset:6px;border-width:2px}
+  .hero-foto img{inset:20px;width:calc(100% - 40px);height:calc(100% - 40px)}
+  .aviso-24{justify-self:start}
+  .titulo-secao h2{font-size:2.6rem}
+  .kits-grade{grid-template-columns:repeat(2,1fr);gap:1.25rem}
+  .kit{padding:1.8rem 1.6rem}
+  .fundo-modal{align-items:center;padding:1.5rem}
+  .janela{border-radius:24px;padding:1.8rem}
+  .barra-pedido{left:auto;right:1.5rem;bottom:1.5rem;padding:0;background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;width:340px}
+  .barra-pedido .btn{box-shadow:0 12px 30px rgba(19,33,94,.3)}
+  .rodape{padding-bottom:2rem}
+  .rodape .conteiner{justify-content:space-between}
+  .rodape .copy{flex-basis:auto}
+}
+@media (min-width:1100px){
+  .kits-grade{grid-template-columns:repeat(4,1fr)}
+  .kit{padding:1.5rem 1.3rem}
+  .kit-topo{flex-direction:column;gap:.5rem}
+}
+.selo-giro{display:grid}
+@media (max-width:719px){
+  .hero-foto{width:clamp(130px,38vw,165px)}
+  .selo-giro{width:54%;left:-20%;bottom:-12%}
+  .selo-giro text{font-size:11px;letter-spacing:.14em}
+  .selo-centro small{display:none}
+  .selo-giro b{font-size:1rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important}.selo-giro svg,.granulado i,.pulo{animation:none !important}.granulado i{opacity:var(--o)}}
+</style>
+</head>
+<body>
+
+<header class="cabecalho">
+  <div class="conteiner">
+    <a class="marca" id="link-site" href="#" aria-label="Pão & Tradição, voltar ao site"><img src="../img/logo.webp" alt="Pão & Tradição" width="51" height="48"></a>
+    <a class="cab-link oculto" id="link-voltar" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      Voltar ao site
+    </a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="granulado" id="granulado" aria-hidden="true"></div>
+    <div class="conteiner hero-grade">
+      <h1>Kits Festa</h1>
+      <div class="hero-foto">
+        <span class="aro" aria-hidden="true"></span>
+        <img id="foto-kits" alt="" width="340" height="340" onerror="if(!this.dataset.r){this.dataset.r=1;this.src='../img/mini-salgados.webp'}">
+        <div class="selo-giro" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><defs><path id="circ" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
+            <text><textPath href="#circ" textLength="228" lengthAdjust="spacing">Kits Festa &#8226; Pão &amp; Tradição &#8226;</textPath></text></svg>
+          <div class="selo-centro"><small>desde</small><b>2004</b></div>
+        </div>
+      </div>
+      <p class="hero-sub">Kits prontos para o seu aniversário, reunião ou evento, com tamanho certo para o número de convidados. A praticidade que você procura, com o sabor da Pão & Tradição.</p>
+      <ol class="passos">
+        <li><span>1</span><div>Escolha o kit<small>pelo número de convidados</small></div></li>
+        <li><span>2</span><div>Aumente a festa<small>inclua adicionais e deixe o kit com a cara <strong>da sua festa</strong></small></div></li>
+        <li><span>3</span><div>Confirme seu pedido<small>e envie pelo WhatsApp</small></div></li>
+      </ol>
+      <p class="aviso-24">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Encomendas com no mínimo 24 horas de antecedência.
+      </p>
+    </div>
+  </section>
+
+  <section class="secao" id="kits">
+    <div class="conteiner">
+      <div class="titulo-secao">
+        <h2>Escolha seu kit</h2>
+        <p>Toque em um kit para escolher e personalizar com adicionais.</p>
+      </div>
+      <div class="kits-grade" id="kits-grade"></div>
+    </div>
+  </section>
+</main>
+
+<canvas id="confete" aria-hidden="true"></canvas>
+
+<div class="barra-pedido" id="barra-pedido">
+  <button class="btn btn-azul" onclick="abrirModal()"><span>Ver pedido</span><span id="barra-total">R$ 0,00</span></button>
+</div>
+
+<!-- ADICIONAIS -->
+<div class="fundo-modal" id="extras-overlay" onclick="if(event.target===this)fecharExtras()">
+  <div class="janela" role="dialog" aria-modal="true" aria-labelledby="extras-titulo">
+    <div class="janela-topo">
+      <div>
+        <h3 id="extras-titulo">Aumente a festa</h3>
+        <p class="janela-sub" id="extras-kit-info"></p>
+      </div>
+      <button class="fechar" onclick="fecharExtras()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div id="extras-lista"></div>
+    <div class="total-barra"><span>Total do pedido</span><strong id="extras-total-val">R$ 0,00</strong></div>
+    <div class="acoes">
+      <button class="btn btn-contorno" onclick="confirmarKit(false)">Sem adicionais</button>
+      <button class="btn btn-azul" onclick="confirmarKit(true)">Adicionar ao pedido</button>
+    </div>
+  </div>
+</div>
+
+<!-- PEDIDO -->
+<div class="fundo-modal" id="modal-overlay" onclick="if(event.target===this)fecharModal()">
+  <div class="janela" role="dialog" aria-modal="true" aria-labelledby="pedido-titulo">
+    <div class="janela-topo">
+      <h3 id="pedido-titulo">Seu pedido</h3>
+      <button class="fechar" onclick="fecharModal()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="resumo" id="modal-resumo"></div>
+    <div class="total-linha"><span>Total</span><strong id="modal-total"></strong></div>
+
+    <div class="agradecimento">
+      <strong>Obrigado pela preferência!</strong>
+      Ficamos felizes em fazer parte deste momento especial. Para seguir com o pedido, precisamos de algumas informações.
+    </div>
+
+    <div class="campo"><label for="f-nome">Seu nome</label><input type="text" id="f-nome" autocomplete="name" placeholder="Nome completo"></div>
+    <div class="campo"><label for="f-fone">Telefone</label><input type="tel" id="f-fone" autocomplete="tel" inputmode="tel" placeholder="(22) 99999-9999"></div>
+    <div class="campo">
+      <span class="campo-rotulo">Quem vai retirar?</span>
+      <div class="opcoes">
+        <button type="button" class="opcao" onclick="selRetirada(this,'sim')" id="ret-sim">Eu mesmo(a)</button>
+        <button type="button" class="opcao" onclick="selRetirada(this,'nao')" id="ret-nao">Outra pessoa</button>
+      </div>
+    </div>
+    <div class="campo oculto" id="outra-pessoa-row"><label for="f-nome-retirada">Nome de quem vai retirar</label><input type="text" id="f-nome-retirada" placeholder="Nome completo"></div>
+    <div class="campo"><label for="f-data">Data de retirada</label><input type="date" id="f-data" onchange="validarData()"></div>
+    <div class="campo oculto" id="hora-row"><label for="f-hora">Horário de retirada</label><input type="time" id="f-hora" onchange="validarData()" min="06:00" max="21:30"><div class="dica" id="dica-hora"></div></div>
+    <div class="campo">
+      <span class="campo-rotulo">Pagamento</span>
+      <div class="opcoes" id="pay-grid">
+        <button type="button" class="opcao" onclick="selPay(this,'Pix')">Pix</button>
+        <button type="button" class="opcao" onclick="selPay(this,'Cartão de Crédito')">Crédito</button>
+        <button type="button" class="opcao" onclick="selPay(this,'Cartão de Débito')">Débito</button>
+        <button type="button" class="opcao" onclick="selPay(this,'Dinheiro')">Dinheiro</button>
+      </div>
+    </div>
+    <div class="campo oculto" id="troco-row"><label for="f-troco">Troco para</label><input type="text" id="f-troco" inputmode="decimal" placeholder="Ex.: R$ 200,00"></div>
+    <div class="campo"><label for="f-obs">Observações</label><input type="text" id="f-obs" placeholder="Sabor da torta, dos docinhos..."></div>
+
+    <label class="lgpd" id="cb-row">
+      <input type="checkbox" id="cb-lgpd" onchange="toggleLGPD()">
+      <span>Concordo que meus dados sejam usados pela Pão & Tradição exclusivamente para processar este pedido.</span>
+    </label>
+    <div class="erro-texto oculto" id="cb-erro">Marque a opção acima para continuar.</div>
+
+    <button class="btn btn-azul btn-enviar" onclick="enviarWpp()">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.42.25-.69.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35zM12 0C5.37 0 0 5.37 0 12c0 2.12.55 4.1 1.52 5.83L0 24l6.34-1.49A11.95 11.95 0 0 0 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 22c-1.89 0-3.65-.52-5.17-1.42l-.37-.22-3.76.89.95-3.66-.24-.38A9.97 9.97 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/></svg>
+      Enviar pedido pelo WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- AVISO 24H -->
+<div class="fundo-modal centro" id="aviso24-overlay">
+  <div class="caixa" role="alertdialog" aria-modal="true">
+    <div class="caixa-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+    <h4>Precisamos de 24 horas</h4>
+    <p>Os kits são preparados sob encomenda, com pelo menos <strong>24 horas de antecedência</strong>. Escolha outra data ou horário para a retirada.</p>
+    <button class="btn btn-azul" onclick="fecharAviso24()">Ajustar data ou horário</button>
+  </div>
+</div>
+
+<!-- SUCESSO -->
+<div class="fundo-modal centro" id="sucesso-overlay">
+  <div class="caixa" role="alertdialog" aria-modal="true">
+    <div class="caixa-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h4>Pedido enviado!</h4>
+    <p>Obrigado pela preferência. Confirme o envio da mensagem no WhatsApp e em breve entraremos em contato.</p>
+    <button class="btn btn-azul" onclick="document.getElementById('sucesso-overlay').classList.remove('aberto')">Fechar</button>
+  </div>
+</div>
+
+<footer class="rodape">
+  <div class="conteiner">
+    <img src="../img/logo-creme.webp" alt="Pão & Tradição" width="72" height="68" loading="lazy">
+    <a id="link-rodape" href="#">padariapaoetradicao.com.br</a>
+    <a href="https://wa.me/5522999631850" target="_blank" rel="noopener">(22) 99963-1850</a>
+    <span class="copy">© <span id="ano">2026</span> Pão & Tradição</span>
+  </div>
+</footer>
+
+<script>
+let kitsSelecionados = {};
+let adicionaisQty = {};
+let pagamento = "";
+let pendingKitId = null;
+let extrasQtyTemp = {};
+
+const $ = id => document.getElementById(id);
+function modoAd(a){ return a.unidade === "/ 100g" ? "g" : a.unidade === "/ und" ? "und" : "qtd"; }
+function custoAd(a, q){ return modoAd(a) === "g" ? a.preco * q / 100 : a.preco * q; }
+function rotuloAd(a, q){ const m = modoAd(a); return m === "g" ? q + "g" : m === "und" ? q + " und" : q + "x"; }
+function lerNumero(v){ const n = parseInt(String(v).replace(/\D/g, ""), 10); return isNaN(n) ? 0 : Math.min(n, 99999); }
+function campoDigitar(a, valor, acao){
+  const m = modoAd(a);
+  return `<label class="digitar"><input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="0" value="${valor || ""}" aria-label="Quantidade de ${esc(a.nome)} em ${m === "g" ? "gramas" : "unidades"}" ${acao}><span>${m === "g" ? "g" : "und"}</span></label>`;
+}
+function fmt(v){ return "R$ " + v.toFixed(2).replace(".", ","); }
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function avisar(msg){
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.textContent = msg; t.classList.remove('oculto');
+  clearTimeout(avisar.t); avisar.t = setTimeout(() => t.classList.add('oculto'), 3200);
+}
+function travarRolagem(){
+  const aberto = document.querySelector('.fundo-modal.aberto');
+  document.body.style.overflow = aberto ? 'hidden' : '';
+}
+
+/* ---------- KITS ---------- */
+function renderKits(){
+  $("kits-grade").innerHTML = kits.map(k => `
+    <article class="kit" id="kit-${k.id}">
+      <div class="kit-topo">
+        <h3>${esc(k.nome)}</h3>
+        <span class="kit-preco">${fmt(k.preco)}</span>
+      </div>
+      <span class="kit-serve">${esc(k.serve)}</span>
+      ${k.desc ? `<p class="kit-desc">${esc(k.desc)}</p>` : ""}
+      <ul class="kit-itens">${k.itens.map(it => `<li>${esc(it)}</li>`).join("")}</ul>
+      ${k.aviso ? `<p class="kit-sabor">${esc(k.aviso)}</p>` : `<div class="kit-rodape"></div>`}
+      <button class="btn btn-azul" id="btn-kit-${k.id}" onclick="selecionarKit(${k.id})">Escolher este kit</button>
+    </article>
+  `).join("");
+}
+
+function selecionarKit(id){
+  pendingKitId = id;
+  extrasQtyTemp = {};
+  const kit = kits.find(k => k.id === id);
+  $("extras-kit-info").textContent = kit.nome + ", " + fmt(kit.preco) + ". " + kit.serve + ".";
+  $("extras-lista").innerHTML = adicionais.map(a => `
+    <div class="extra" id="eopt-${a.id}">
+      <div>
+        <div class="extra-nome">${esc(a.nome)}</div>
+        <div class="extra-preco">+ ${fmt(a.preco)}${a.unidade ? " " + esc(a.unidade) : ""}${modoAd(a) === "g" ? ", digite em gramas" : ""}</div>
+      </div>
+      ${modoAd(a) === "qtd" ? `<div class="qtd">
+        <button type="button" onclick="changeExtraTemp('${a.id}',-1,event)" aria-label="Diminuir ${esc(a.nome)}">&minus;</button>
+        <span id="etmp-${a.id}">0</span>
+        <button type="button" onclick="changeExtraTemp('${a.id}',1,event)" aria-label="Aumentar ${esc(a.nome)}">+</button>
+      </div>` : campoDigitar(a, "", `oninput="digitarExtraTemp('${a.id}',this.value)"`)}
+    </div>
+  `).join("");
+  $("extras-overlay").classList.add("aberto");
+  travarRolagem();
+  atualizarTotalExtras();
+}
+function fecharExtras(){ $("extras-overlay").classList.remove("aberto"); pendingKitId = null; travarRolagem(); }
+
+function changeExtraTemp(id, d, e){
+  e.stopPropagation();
+  extrasQtyTemp[id] = Math.max(0, (extrasQtyTemp[id] || 0) + d);
+  $("etmp-" + id).textContent = extrasQtyTemp[id];
+  $("eopt-" + id).classList.toggle("sel", extrasQtyTemp[id] > 0);
+  atualizarTotalExtras();
+}
+
+function digitarExtraTemp(id, v){
+  extrasQtyTemp[id] = lerNumero(v);
+  $("eopt-" + id).classList.toggle("sel", extrasQtyTemp[id] > 0);
+  atualizarTotalExtras();
+}
+
+function atualizarTotalExtras(){
+  let total = calcTotal();
+  const kit = kits.find(k => k.id === pendingKitId);
+  if (kit) total += kit.preco;
+  adicionais.forEach(a => { total += custoAd(a, extrasQtyTemp[a.id] || 0); });
+  $("extras-total-val").textContent = fmt(total);
+}
+
+function confirmarKit(comExtras){
+  if (pendingKitId == null) return;
+  const kitAdicionado = pendingKitId;
+  kitsSelecionados[pendingKitId] = (kitsSelecionados[pendingKitId] || 0) + 1;
+  if (comExtras) {
+    Object.keys(extrasQtyTemp).forEach(id => {
+      if (extrasQtyTemp[id] > 0) adicionaisQty[id] = (adicionaisQty[id] || 0) + extrasQtyTemp[id];
+    });
+  }
+  fecharExtras();
+  updateKitCards();
+  updateBarra();
+  avisar("Kit adicionado ao pedido.");
+  const bt = $("btn-kit-" + kitAdicionado);
+  if (bt) { const r = bt.getBoundingClientRect(); confete(r.left + r.width / 2, r.top + r.height / 2); }
+  const tot = $("barra-total"); tot.classList.remove("pulo"); void tot.offsetWidth; tot.classList.add("pulo");
+}
+
+function updateKitCards(){
+  kits.forEach(k => {
+    const qty = kitsSelecionados[k.id] || 0;
+    $("kit-" + k.id).classList.toggle("selecionado", qty > 0);
+    $("btn-kit-" + k.id).textContent = qty > 0 ? `No pedido (${qty})` : "Escolher este kit";
+  });
+}
+
+function temKit(){ return Object.values(kitsSelecionados).some(v => v > 0); }
+function updateBarra(){
+  $("barra-pedido").classList.toggle("visivel", temKit());
+  $("barra-total").textContent = fmt(calcTotal());
+}
+
+function calcTotal(){
+  let total = 0;
+  kits.forEach(k => { total += (kitsSelecionados[k.id] || 0) * k.preco; });
+  adicionais.forEach(a => { total += custoAd(a, adicionaisQty[a.id] || 0); });
+  return total;
+}
+
+/* ---------- PEDIDO ---------- */
+function amanhaISO(){
+  const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+function abrirModal(){
+  if (!temKit()) { avisar("Escolha pelo menos um kit."); return; }
+  renderResumo();
+  $("f-data").min = amanhaISO();
+  $("modal-overlay").classList.add("aberto");
+  travarRolagem();
+}
+
+function fecharModal(){
+  $("modal-overlay").classList.remove("aberto");
+  travarRolagem();
+  pagamento = "";
+  document.querySelectorAll("#pay-grid .opcao").forEach(e => e.classList.remove("sel"));
+  $("troco-row").classList.add("oculto");
+  document.querySelectorAll("#ret-sim, #ret-nao").forEach(e => e.classList.remove("sel"));
+  $("outra-pessoa-row").classList.add("oculto");
+  $("f-nome-retirada").value = "";
+  $("f-hora").value = "";
+  $("dica-hora").textContent = "";
+  $("hora-row").classList.add("oculto");
+  $("cb-lgpd").checked = false;
+  $("cb-row").classList.remove("marcado");
+  $("cb-erro").classList.add("oculto");
+}
+
+function renderResumo(){
+  let html = "";
+  kits.filter(k => (kitsSelecionados[k.id] || 0) > 0).forEach(k => {
+    const qty = kitsSelecionados[k.id];
+    html += `<div class="resumo-linha">
+      <div>
+        <div class="resumo-nome">${esc(k.nome)}</div>
+        <div class="resumo-itens">${k.itens.map(esc).join(", ")}</div>
+      </div>
+      <div class="resumo-direita">
+        <span class="resumo-valor">${fmt(k.preco * qty)}</span>
+        <div class="qtd">
+          <button type="button" onclick="mudarQtyKit(${k.id},-1)" aria-label="Diminuir">&minus;</button>
+          <span>${qty}</span>
+          <button type="button" onclick="mudarQtyKit(${k.id},1)" aria-label="Aumentar">+</button>
+        </div>
+        <button type="button" class="remover" onclick="removerKit(${k.id})">Remover</button>
+      </div>
+    </div>`;
+  });
+
+  const ads = adicionais.filter(a => (adicionaisQty[a.id] || 0) > 0);
+  if (ads.length > 0) {
+    html += `<div class="resumo-titulo">Adicionais</div>`;
+    ads.forEach(a => {
+      html += `<div class="resumo-linha">
+        <div><div class="resumo-nome">${esc(a.nome)}</div><div class="resumo-itens">${fmt(a.preco)}${a.unidade ? " " + esc(a.unidade) : ""}</div></div>
+        <div class="resumo-direita">
+          <span class="resumo-valor">${fmt(custoAd(a, adicionaisQty[a.id]))}</span>
+          ${modoAd(a) === "qtd" ? `<div class="qtd">
+            <button type="button" onclick="mudarQtyAdicional('${a.id}',-1)" aria-label="Diminuir">&minus;</button>
+            <span>${adicionaisQty[a.id]}</span>
+            <button type="button" onclick="mudarQtyAdicional('${a.id}',1)" aria-label="Aumentar">+</button>
+          </div>` : campoDigitar(a, adicionaisQty[a.id], `onchange="digitarAdicional('${a.id}',this.value)"`)}
+          <button type="button" class="remover" onclick="removerAdicional('${a.id}')">Remover</button>
+        </div>
+      </div>`;
+    });
+  }
+  $("modal-resumo").innerHTML = html;
+  $("modal-total").textContent = fmt(calcTotal());
+}
+
+function mudarQtyKit(id, d){
+  kitsSelecionados[id] = Math.max(0, (kitsSelecionados[id] || 0) + d);
+  if (kitsSelecionados[id] === 0) delete kitsSelecionados[id];
+  updateKitCards(); updateBarra();
+  if (!temKit()) fecharModal(); else renderResumo();
+}
+function removerKit(id){
+  delete kitsSelecionados[id];
+  updateKitCards(); updateBarra();
+  if (!temKit()) fecharModal(); else renderResumo();
+}
+function mudarQtyAdicional(id, d){
+  adicionaisQty[id] = Math.max(0, (adicionaisQty[id] || 0) + d);
+  if (adicionaisQty[id] === 0) delete adicionaisQty[id];
+  updateBarra(); renderResumo();
+}
+function digitarAdicional(id, v){
+  const q = lerNumero(v);
+  if (q > 0) adicionaisQty[id] = q; else delete adicionaisQty[id];
+  updateBarra(); renderResumo();
+}
+function removerAdicional(id){
+  delete adicionaisQty[id];
+  updateBarra(); renderResumo();
+}
+
+function selRetirada(el, val){
+  document.querySelectorAll("#ret-sim, #ret-nao").forEach(e => e.classList.remove("sel"));
+  el.classList.add("sel");
+  $("outra-pessoa-row").classList.toggle("oculto", val !== "nao");
+}
+
+function prazoOk(dataVal, horaVal){
+  const escolhida = new Date(dataVal + "T" + horaVal + ":00");
+  return escolhida >= new Date(Date.now() + 24 * 60 * 60 * 1000);
+}
+function horaMinimaAmanha(){
+  const m = new Date(Date.now() + 24 * 60 * 60 * 1000 + 4 * 60 * 1000);
+  m.setMinutes(Math.ceil(m.getMinutes() / 5) * 5, 0, 0);
+  return String(m.getHours()).padStart(2, "0") + ":" + String(m.getMinutes()).padStart(2, "0");
+}
+// Mostra orientacao e erro ao lado do campo, sem apagar nada nem abrir aviso
+function validarData(){
+  const dataVal = $("f-data").value, horaVal = $("f-hora").value, dica = $("dica-hora");
+  if (!dataVal) { $("hora-row").classList.add("oculto"); return; }
+  $("hora-row").classList.remove("oculto");
+  const minData = amanhaISO();
+  dica.classList.remove("erro");
+  if (dataVal < minData) {
+    const [y, m, d] = minData.split("-");
+    dica.textContent = "Escolha uma data a partir de " + d + "/" + m + ".";
+    dica.classList.add("erro");
+    return;
+  }
+  const minHora = dataVal === minData ? horaMinimaAmanha() : null;
+  if (minHora && minHora > "21:30") {
+    const dd = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    dica.textContent = "Para amanhã não há mais tempo de preparo. Escolha a partir de " + String(dd.getDate()).padStart(2, "0") + "/" + String(dd.getMonth() + 1).padStart(2, "0") + ".";
+    dica.classList.add("erro");
+    return;
+  }
+  const faixa = minHora && minHora > "06:00" ? "a partir das " + minHora.replace(":", "h") + " até 21h30" : "das 6h às 21h30";
+  if (horaVal && !prazoOk(dataVal, horaVal)) {
+    dica.textContent = "Para esta data, a retirada precisa ser " + faixa + ".";
+    dica.classList.add("erro");
+  } else {
+    dica.textContent = "Retirada " + faixa + ".";
+  }
+}
+function fecharAviso24(){ $("aviso24-overlay").classList.remove("aberto"); $("f-hora").focus(); }
+
+function selPay(el, val){
+  document.querySelectorAll("#pay-grid .opcao").forEach(e => e.classList.remove("sel"));
+  el.classList.add("sel"); pagamento = val;
+  $("troco-row").classList.toggle("oculto", val !== "Dinheiro");
+}
+
+function toggleLGPD(){
+  const marcado = $("cb-lgpd").checked;
+  $("cb-row").classList.toggle("marcado", marcado);
+  if (marcado) $("cb-erro").classList.add("oculto");
+}
+
+function enviarWpp(){
+  const nome = $("f-nome").value.trim();
+  const fone = $("f-fone").value.trim();
+  const data = $("f-data").value;
+  const hora = $("f-hora").value;
+  const obs = $("f-obs").value.trim();
+  const troco = $("f-troco").value.trim();
+  const retSim = $("ret-sim").classList.contains("sel");
+  const retNao = $("ret-nao").classList.contains("sel");
+  const nomeRetirada = $("f-nome-retirada").value.trim();
+
+  if (!nome || !fone) { avisar("Preencha nome e telefone."); return; }
+  if (!retSim && !retNao) { avisar("Informe quem vai fazer a retirada."); return; }
+  if (retNao && !nomeRetirada) { avisar("Informe o nome de quem vai retirar."); return; }
+  if (!data || !hora) { avisar("Informe a data e o horário de retirada."); return; }
+  if (!prazoOk(data, hora)) { validarData(); $("aviso24-overlay").classList.add("aberto"); return; }
+  if (!pagamento) { avisar("Escolha a forma de pagamento."); return; }
+  if (!$("cb-lgpd").checked) {
+    $("cb-erro").classList.remove("oculto");
+    $("cb-row").scrollIntoView({behavior: "smooth", block: "center"});
+    return;
+  }
+
+  const [y, m, d] = data.split("-");
+  const dataFmt = `${d}/${m}/${y} às ${hora}`;
+
+  let msg = "*Pão & Tradição | Encomenda Kit Festa*\n\n";
+  const quemRetira = retNao ? nomeRetirada : nome;
+  msg += `*Solicitante:* ${nome}\n*Tel:* ${fone}\n`;
+  msg += `*Retirada por:* ${quemRetira}\n*Data de retirada:* ${dataFmt}\n\n`;
+  kits.filter(k => (kitsSelecionados[k.id] || 0) > 0).forEach(k => {
+    const qty = kitsSelecionados[k.id];
+    msg += `*Kit:* ${k.nome}${qty > 1 ? " x" + qty : ""}: ${fmt(k.preco * qty)}\n`;
+    k.itens.forEach(it => { msg += `  · ${it}\n`; });
+  });
+  const ads = adicionais.filter(a => (adicionaisQty[a.id] || 0) > 0);
+  if (ads.length > 0) {
+    msg += `\n*Adicionais:*\n`;
+    ads.forEach(a => { msg += `  · ${a.nome}: ${rotuloAd(a, adicionaisQty[a.id])} = ${fmt(custoAd(a, adicionaisQty[a.id]))}\n`; });
+  }
+  msg += `\n*Total: ${fmt(calcTotal())}*\n*Pagamento:* ${pagamento}`;
+  if (pagamento === "Dinheiro" && troco) msg += ` (troco p/ ${troco})`;
+  if (obs) msg += `\n*Obs:* ${obs}`;
+
+  window.open("https://wa.me/" + WPP + "?text=" + encodeURIComponent(msg), "_blank");
+  fecharModal();
+  setTimeout(() => { $("sucesso-overlay").classList.add("aberto"); }, 800);
+}
+
+/* ---------- FOTO DO TOPO (mesma do painel do site) ---------- */
+function rodizioFotos(img, fotos){
+  let i = 0; img.src = fotos[0];
+  if (fotos.length < 2) return;
+  img.style.transition = "opacity .6s ease";
+  setInterval(() => {
+    i = (i + 1) % fotos.length;
+    const pre = new Image();
+    pre.onload = () => { img.style.opacity = 0; setTimeout(() => { img.src = fotos[i]; img.style.opacity = 1; }, 600); };
+    pre.src = fotos[i];
+  }, 4500);
+}
+async function carregarFoto(){
+  const img = $("foto-kits");
+  try {
+    const url = "https://firestore.googleapis.com/v1/projects/" + FIREBASE.projectId +
+      "/databases/(default)/documents/vitrine/config-site?key=" + FIREBASE.apiKey;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    const cf = j.fields || {};
+    const arr = cf.kitsFotos && cf.kitsFotos.arrayValue && cf.kitsFotos.arrayValue.values;
+    let fotos = arr ? arr.map(v => v.stringValue).filter(Boolean) : [];
+    if (!fotos.length && cf.kitsFoto && cf.kitsFoto.stringValue) fotos = [cf.kitsFoto.stringValue];
+    rodizioFotos(img, fotos.length ? fotos : [FOTO_PADRAO]);
+  } catch (e) {
+    img.src = FOTO_PADRAO;
+  }
+}
+
+/* ---------- INICIO ---------- */
+["link-site", "link-voltar", "link-rodape"].forEach(id => { $(id).href = SITE; });
+// "Voltar ao site" so aparece para quem veio do site principal
+(function(){
+  let doSite = false;
+  try {
+    const u = new URL(location.href);
+    if (u.searchParams.get("de") === "site") { sessionStorage.setItem("deSite", "1"); u.searchParams.delete("de"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+    const ref = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, "") : "";
+    doSite = sessionStorage.getItem("deSite") === "1" || ref === "padariapaoetradicao.com.br";
+  } catch (e) {}
+  if (doSite) $("link-voltar").classList.remove("oculto");
+})();
+$("ano").textContent = new Date().getFullYear();
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if ($("extras-overlay").classList.contains("aberto")) fecharExtras();
+  else if ($("modal-overlay").classList.contains("aberto")) fecharModal();
+});
+/* ---------- TCHAN: granulado e confete nas cores da marca ---------- */
+const CORES = ["#EFAD4C", "#13215E", "#F6C06E", "#D8912A"];
+function granulado(){
+  const g = $("granulado"); if (!g) return;
+  const larga = innerWidth >= 720;
+  // pontos espalhados ao redor da foto (lado direito do topo)
+  let s = 7; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  const qtd = larga ? 34 : 18;
+  let html = "";
+  for (let i = 0; i < qtd; i++) {
+    const x = larga ? 52 + rnd() * 46 : 56 + rnd() * 42;
+    const y = larga ? 6 + rnd() * 80 : 1 + rnd() * 22;
+    const r = Math.round(rnd() * 180);
+    html += `<i style="left:${x}%;top:${y}%;background:${CORES[i % CORES.length]};--r:${r}deg;--r0:${r - 40}deg;--o:${(.55 + rnd() * .4).toFixed(2)};--d:${(2.6 + rnd() * 2.8).toFixed(2)}s;--dx:${(rnd() * 8 - 4).toFixed(1)}px;--dy:${(4 + rnd() * 7).toFixed(1)}px;--dr:${Math.round(rnd() * 60 - 30)}deg;animation-delay:${i * 25}ms,${i * 25 + 900}ms"></i>`;
+  }
+  g.innerHTML = html;
+}
+function confete(x, y){
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = $("confete"), ctx = c.getContext("2d"), dpr = Math.min(devicePixelRatio || 1, 2);
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+  const pts = Array.from({length: 90}, () => {
+    const a = -Math.PI / 2 + (Math.random() - .5) * Math.PI * 1.3, v = 7 + Math.random() * 8;
+    return { x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+             w: 6 + Math.random() * 5, h: 3 + Math.random() * 2, fase: Math.random() * 6, cor: CORES[Math.floor(Math.random() * CORES.length)] };
+  });
+  const inicio = performance.now();
+  (function quadro(agora){
+    const t = (agora - inicio) / 2800;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    if (t >= 1) return;
+    pts.forEach(p => {
+      p.vy = Math.min(p.vy + .2, 3.2); p.vx *= .98; p.x += p.vx + Math.sin(agora / 260 + p.fase) * .9; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.globalAlpha = t < .7 ? 1 : 1 - (t - .7) / .3; ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.fillStyle = p.cor; ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(-p.w / 2, -p.h / 2, p.w, p.h, p.h / 2); else ctx.rect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.fill(); ctx.restore();
+    });
+    requestAnimationFrame(quadro);
+  })(inicio);
+}
+
+renderKits();
+granulado();
+carregarFoto();
+</script>
+</body>
+</html>
