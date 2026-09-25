@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trabalhe conosco | Pão & Tradição</title>
+<meta name="description" content="Faça parte da equipe da Pão & Tradição em Nova Friburgo. Conheça os benefícios e envie seu currículo.">
+<meta name="theme-color" content="#FDFBF5">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Trabalhe conosco | Pão & Tradição">
+<meta property="og:description" content="Faça parte da nossa equipe. Envie seu currículo pelo WhatsApp ou e-mail.">
+<meta property="og:url" content="https://www.trabalheconosco.padariapaoetradicao.com.br/">
+<meta property="og:image" content="https://padariapaoetradicao.com.br/img/compartilhar.jpg">
+<link rel="canonical" href="https://www.trabalheconosco.padariapaoetradicao.com.br/">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<script>
+/* =====================================================================
+   AREA DE EDICAO
+   ===================================================================== */
+const SITE = "https://padariapaoetradicao.com.br";
+const WPP_RH = "5522996227411";
+const EMAIL_RH = "rh.paoetradicao11@gmail.com";
+/* ===================== FIM DA AREA DE EDICAO ===================== */
+</script>
+
+<style>
+:root{
+  --azul:#13215E;--dourado:#EFAD4C;--creme:#F5F0DC;--fundo:#FDFBF5;--branco:#fff;
+  --tinta-suave:#5A6283;--linha:rgba(19,33,94,.12);
+  --serif:'Bodoni Moda','Didot','Bodoni 72',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-size:1rem;line-height:1.6;color:var(--azul);background:var(--fundo);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--dourado);outline-offset:3px;border-radius:6px}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;line-height:1.1;font-optical-sizing:none;font-variation-settings:"opsz" 11}
+.conteiner{width:100%;max-width:1040px;margin:0 auto;padding:0 1.25rem}
+.oculto{display:none !important}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:52px;padding:0 1.6rem;border-radius:999px;font-weight:600;font-size:.98rem;text-decoration:none;transition:background-color .2s,border-color .2s,color .2s}
+.btn svg{width:20px;height:20px;flex-shrink:0}
+.btn-azul{background:var(--azul);color:var(--creme)}
+.btn-azul:hover{background:#1D2E7C}
+.btn-contorno{border:1.5px solid var(--azul);color:var(--azul)}
+.btn-contorno:hover{background:var(--azul);color:var(--creme)}
+
+/* cabecalho */
+.cabecalho{position:sticky;top:0;z-index:20;background:rgba(253,251,245,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
+.cabecalho .conteiner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.marca img{height:48px;width:auto}
+.cab-link{font-size:.9rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;color:var(--tinta-suave)}
+.cab-link:hover{color:var(--azul)}
+.cab-link svg{width:16px;height:16px}
+
+/* topo */
+.hero{position:relative;overflow:hidden;padding:2rem 0 3rem}
+.hero .conteiner{position:relative;z-index:1}
+.hero-grade{display:grid;grid-template-columns:1fr auto;grid-template-areas:"titulo selo" "texto texto" "acoes acoes";column-gap:1rem;align-items:center}
+.hero h1{grid-area:titulo;font-size:2.4rem}
+.hero-texto{grid-area:texto;margin-top:1.1rem;color:var(--tinta-suave);font-size:1rem;max-width:54ch}
+.hero-texto p + p{margin-top:.8rem}
+.hero-texto strong{color:var(--azul);font-weight:600}
+.hero-acoes{grid-area:acoes;display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
+.hero-selo{grid-area:selo;position:relative;width:clamp(120px,34vw,160px);aspect-ratio:1}
+.aro{position:absolute;inset:0;border-radius:50%;border:4px solid var(--dourado)}
+.aro::before{content:"";position:absolute;inset:4px;border-radius:50%;border:1.5px solid var(--azul)}
+.hero-selo > img{position:absolute;inset:11px;width:calc(100% - 22px);height:calc(100% - 22px);border-radius:50%;object-fit:cover}
+.selo-giro{position:absolute;left:-10%;bottom:-14%;width:52%;aspect-ratio:1;border-radius:50%;background:var(--dourado);display:grid;place-items:center;box-shadow:0 10px 30px rgba(19,33,94,.2)}
+.selo-giro svg{position:absolute;inset:0;width:100%;height:100%;animation:girar 28s linear infinite}
+.selo-giro text{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.14em;fill:var(--azul);text-transform:uppercase}
+.selo-giro b{position:relative;font-family:var(--serif);font-size:1rem;font-weight:600;font-optical-sizing:none;font-variation-settings:"opsz" 11}
+@keyframes girar{to{transform:rotate(360deg)}}
+.granulado{position:absolute;inset:0;z-index:0;pointer-events:none}
+.granulado i{position:absolute;width:10px;height:3.5px;border-radius:3px;opacity:0;animation:cair .9s cubic-bezier(.2,.8,.3,1) forwards,flutuar var(--d) ease-in-out infinite alternate}
+@keyframes cair{from{opacity:0;transform:translateY(-14px) rotate(var(--r0))}to{opacity:var(--o);transform:translateY(0) rotate(var(--r))}}
+@keyframes flutuar{from{transform:translate(0,0) rotate(var(--r))}to{transform:translate(var(--dx),var(--dy)) rotate(calc(var(--r) + var(--dr)))}}
+
+/* secoes */
+.secao{padding:3.5rem 0}
+.titulo-secao{margin-bottom:1.5rem}
+.titulo-secao h2{font-size:1.9rem}
+.titulo-secao p{color:var(--tinta-suave);margin-top:.4rem;font-size:.95rem}
+.faixa{background:var(--creme);border-radius:28px 28px 0 0}
+
+.beneficios{display:grid;gap:.75rem}
+.beneficio{display:flex;gap:1rem;align-items:center;background:var(--branco);border:1px solid var(--linha);border-radius:20px;padding:1rem 1.1rem}
+.icone{width:48px;height:48px;border-radius:50%;background:var(--creme);display:grid;place-items:center;flex-shrink:0;color:var(--azul)}
+.faixa .icone{background:var(--fundo)}
+.icone svg{width:24px;height:24px}
+.beneficio strong{display:block;font-weight:600;font-size:1rem}
+.beneficio span{font-size:.9rem;color:var(--tinta-suave)}
+
+.perfil{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.perfil div{background:var(--branco);border:1px solid var(--linha);border-radius:20px;padding:1.2rem .8rem;display:grid;justify-items:center;gap:.6rem;text-align:center;font-weight:600;font-size:.95rem}
+.perfil .icone{width:52px;height:52px;background:var(--azul);color:var(--dourado)}
+
+.cta{background:var(--dourado);border-radius:28px;padding:2.2rem 1.5rem;text-align:center}
+.cta h2{font-size:2rem}
+.cta p{margin:.8rem auto 1.6rem;max-width:44ch;color:rgba(19,33,94,.85)}
+.cta-botoes{display:flex;flex-direction:column;gap:.6rem;align-items:stretch;max-width:360px;margin:0 auto}
+.cta .btn-contorno{background:transparent}
+
+.rodape{background:var(--azul);color:rgba(245,240,220,.75);padding:2rem 0;font-size:.88rem;margin-top:3.5rem}
+.rodape .conteiner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1rem 1.5rem;text-align:center}
+.rodape img{width:72px;height:auto}
+.rodape a{color:var(--creme);text-decoration:none}
+.rodape a:hover{color:var(--dourado)}
+.rodape .copy{flex-basis:100%}
+
+@media (min-width:720px){
+  .hero{padding:3.5rem 0 4rem}
+  .hero-grade{grid-template-columns:1.3fr .7fr;grid-template-areas:"titulo selo" "texto selo" "acoes selo";column-gap:3rem}
+  .hero h1{font-size:3.6rem;align-self:end}
+  .hero-texto{font-size:1.05rem}
+  .hero-selo{width:280px;justify-self:end}
+  .aro{border-width:6px}.aro::before{inset:6px;border-width:2px}
+  .hero-selo > img{inset:20px;width:calc(100% - 40px);height:calc(100% - 40px)}
+  .selo-giro{left:-12%;bottom:-6%;width:42%}
+  .selo-giro text{font-size:8.6px;letter-spacing:.2em}
+  .selo-giro b{font-size:1.4rem}
+  .secao{padding:5rem 0}
+  .titulo-secao h2{font-size:2.6rem}
+  .beneficios{grid-template-columns:repeat(2,1fr)}
+  .perfil{grid-template-columns:repeat(4,1fr)}
+  .cta{padding:3.5rem 2rem}
+  .cta h2{font-size:2.6rem}
+  .cta-botoes{flex-direction:row;justify-content:center;max-width:none}
+  .rodape .conteiner{justify-content:space-between}
+  .rodape .copy{flex-basis:auto}
+}
+@media (min-width:1000px){.beneficios{grid-template-columns:repeat(3,1fr)}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important}.selo-giro svg,.granulado i{animation:none !important}.granulado i{opacity:var(--o)}}
+</style>
+</head>
+<body>
+
+<header class="cabecalho">
+  <div class="conteiner">
+    <a class="marca" id="link-site" href="#" aria-label="Pão & Tradição"><img src="img/logo.webp" alt="Pão & Tradição" width="51" height="48"></a>
+    <a class="cab-link oculto" id="link-voltar" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      Voltar ao site
+    </a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="granulado" id="granulado" aria-hidden="true"></div>
+    <div class="conteiner hero-grade">
+      <h1>Trabalhe conosco</h1>
+      <div class="hero-selo" aria-hidden="true">
+        <span class="aro"></span>
+        <img src="img/selo-azul.webp" alt="" width="240" height="240">
+        <div class="selo-giro">
+          <svg viewBox="0 0 100 100"><defs><path id="circ" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
+            <text><textPath href="#circ" textLength="228" lengthAdjust="spacing">Faça parte &#8226; Pão &amp; Tradição &#8226;</textPath></text></svg>
+          <b>2004</b>
+        </div>
+      </div>
+      <div class="hero-texto">
+        <p>Há mais de 20 anos fazemos parte da história de Nova Friburgo, conectando pessoas a novas oportunidades.</p>
+        <p>Com experiência, seriedade e um olhar humano, seguimos ajudando a construir <strong>histórias profissionais</strong> e impulsionando o desenvolvimento da nossa cidade.</p>
+      </div>
+      <div class="hero-acoes">
+        <a class="btn btn-azul" href="#contato">Quero fazer parte</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao faixa">
+    <div class="conteiner">
+      <div class="titulo-secao">
+        <h2>Benefícios</h2>
+        <p>O que você ganha fazendo parte da nossa equipe.</p>
+      </div>
+      <div class="beneficios">
+        <div class="beneficio">
+          <span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg></span>
+          <div><strong>Lanche fornecido</strong><span>Lanche diário fornecido pela empresa.</span></div>
+        </div>
+        <div class="beneficio">
+          <span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3M12 8v3M17 8v3"/><path d="M7 4h.01M12 4h.01M17 4h.01"/></svg></span>
+          <div><strong>Aniversário especial</strong><span>Lanche especial no seu dia.</span></div>
+        </div>
+        <div class="beneficio">
+          <span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11M6.5 17.5h11"/><path d="M4 9V5a1 1 0 0 1 1-1h1.5v16H5a1 1 0 0 1-1-1v-4"/><path d="M20 9V5a1 1 0 0 0-1-1h-1.5v16H19a1 1 0 0 0 1-1v-4"/><path d="M2 12h4M18 12h4"/></svg></span>
+          <div><strong>Convênio academia</strong><span>Cuide da saúde com desconto.</span></div>
+        </div>
+        <div class="beneficio">
+          <span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2Z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7Z"/></svg></span>
+          <div><strong>Convênio SESI</strong><span>Acesso a educação e cultura.</span></div>
+        </div>
+        <div class="beneficio">
+          <span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5c-1.5-1.5-3.5-2-5-1.5S4 6 4 8.5c0 2 .8 3.5 1.2 5.5.5 2.6.8 6 2.3 6s1.5-4 2.5-5 1-1 2 0 1 5 2.5 5 1.8-3.4 2.3-6c.4-2 1.2-3.5 1.2-5.5 0-2.5-1.5-4-3-4.5s-3.5 0-5 1.5Z"/></svg></span>
+          <div><strong>Plano odontológico</strong><span>Cuidado com sua saúde bucal.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="conteiner">
+      <div class="titulo-secao">
+        <h2>O que esperamos de você</h2>
+        <p>As qualidades que fazem a diferença no dia a dia da nossa equipe.</p>
+      </div>
+      <div class="perfil">
+        <div><span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Trabalho em equipe</div>
+        <div><span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>Organização</div>
+        <div><span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg></span>Agilidade</div>
+        <div><span class="icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>Comprometimento</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="conteiner" id="contato">
+    <div class="cta">
+      <h2>Ficou interessado?</h2>
+      <p>Se você se identifica com esse perfil e quer fazer parte da nossa equipe, fale com o nosso RH. Envie seu currículo ou agende uma entrevista.</p>
+      <div class="cta-botoes">
+        <a class="btn btn-azul" id="btn-wpp" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.42.25-.69.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35zM12 0C5.37 0 0 5.37 0 12c0 2.12.55 4.1 1.52 5.83L0 24l6.34-1.49A11.95 11.95 0 0 0 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 22c-1.89 0-3.65-.52-5.17-1.42l-.37-.22-3.76.89.95-3.66-.24-.38A9.97 9.97 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/></svg>
+          WhatsApp do RH
+        </a>
+        <a class="btn btn-contorno" id="btn-email" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+          Enviar currículo por e-mail
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="rodape">
+  <div class="conteiner">
+    <img src="img/logo-creme.webp" alt="Pão & Tradição" width="72" height="68" loading="lazy">
+    <a id="link-rodape" href="#">padariapaoetradicao.com.br</a>
+    <span class="copy">© <span id="ano">2026</span> Pão & Tradição</span>
+  </div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+["link-site", "link-voltar", "link-rodape"].forEach(id => { $(id).href = SITE; });
+$("ano").textContent = new Date().getFullYear();
+$("btn-wpp").href = "https://wa.me/" + WPP_RH + "?text=" + encodeURIComponent("Olá, gostaria de enviar meu currículo e saber mais sobre as vagas!");
+$("btn-email").href = "mailto:" + EMAIL_RH + "?subject=" + encodeURIComponent("Currículo: vaga Pão & Tradição");
+
+// "Voltar ao site" so aparece para quem veio do site principal
+(function(){
+  let doSite = false;
+  try {
+    const u = new URL(location.href);
+    if (u.searchParams.get("de") === "site") { sessionStorage.setItem("deSite", "1"); u.searchParams.delete("de"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+    const ref = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, "") : "";
+    doSite = sessionStorage.getItem("deSite") === "1" || ref === "padariapaoetradicao.com.br";
+  } catch (e) {}
+  if (doSite) $("link-voltar").classList.remove("oculto");
+})();
+
+// Granulado nas cores da marca
+(function(){
+  const cores = ["#EFAD4C", "#13215E", "#F6C06E", "#D8912A"], larga = innerWidth >= 720;
+  let s = 5; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  let html = "";
+  for (let i = 0, n = larga ? 28 : 16; i < n; i++) {
+    const x = larga ? 60 + rnd() * 38 : 58 + rnd() * 40, y = larga ? 6 + rnd() * 70 : 1 + rnd() * 22, r = Math.round(rnd() * 180);
+    html += `<i style="left:${x}%;top:${y}%;background:${cores[i % 4]};--r:${r}deg;--r0:${r - 40}deg;--o:${(.55 + rnd() * .4).toFixed(2)};--d:${(2.6 + rnd() * 2.8).toFixed(2)}s;--dx:${(rnd() * 8 - 4).toFixed(1)}px;--dy:${(4 + rnd() * 7).toFixed(1)}px;--dr:${Math.round(rnd() * 60 - 30)}deg;animation-delay:${i * 25}ms,${i * 25 + 900}ms"></i>`;
+  }
+  $("granulado").innerHTML = html;
+})();
+</script>
+</body>
+</html>
