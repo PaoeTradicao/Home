@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pão & Tradição | Padaria e Confeitaria em Nova Friburgo</title>
+<meta name="description" content="Padaria e confeitaria no Prado, em Nova Friburgo, há mais de 20 anos. Pão fresquinho, salgados, doces, kits festa e delivery.">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<meta name="theme-color" content="#FDFBF5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#13215E" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pão & Tradição | Padaria e Confeitaria">
+<meta property="og:description" content="Há mais de 20 anos em Nova Friburgo. Veja o cardápio, monte seu kit festa ou encomende pelo WhatsApp.">
+<meta property="og:url" content="https://www.padariapaoetradicao.com.br/">
+<meta property="og:image" content="https://padariapaoetradicao.com.br/img/compartilhar.jpg">
+<link rel="canonical" href="https://www.padariapaoetradicao.com.br/">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<style>.textos-carregando .txt-editavel{opacity:0}.txt-editavel{transition:opacity .3s}</style>
+<script>document.documentElement.classList.add("textos-carregando");</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<script>
+/* =====================================================================
+   AREA DE EDICAO
+   Tudo o que muda com frequencia fica aqui. Edite so o texto entre aspas.
+   Para trocar uma foto, envie o arquivo para a pasta img/ e troque o nome.
+   ===================================================================== */
+const CONFIG = {
+
+  // Firebase da vitrine (preencha para editar produtos pelo admin.html)
+  // Enquanto estiver vazio, o site usa a lista "vitrine" abaixo.
+  firebase: { apiKey: "AIzaSyAbWca-fYMQgvQl7otkHZibptOox1NTFN4", projectId: "planner-c01a1" },
+
+  // Produtos da vitrine (reserva: usados se o Firebase estiver vazio ou fora do ar)
+  // obs: se comecar com "a partir de", aparece antes do preco; senao, depois
+  vitrine: [
+    { nome: "Pastelzinho", descricao: "Crocante por fora, bem recheado por dentro.", preco: "R$ 5,99", obs: "por 100g", foto: "img/pastelzinho.webp" },
+    { nome: "Mini salgados", descricao: "Coxinha, quibe, enroladinho e muito mais.", preco: "R$ 4,99", obs: "a partir de", foto: "img/mini-salgados.webp" },
+    { nome: "Brownie recheado", descricao: "Artesanal, feito todos os dias.", preco: "R$ 13,00", obs: "", foto: "img/brownie.webp" },
+    { nome: "Café", descricao: "Passado na hora, desde as 6h da manhã.", preco: "R$ 3,00", obs: "a partir de", foto: "img/cafe.webp" },
+    { nome: "Salgados fritos", descricao: "Fritos na hora, sempre quentinhos.", preco: "R$ 7,25", obs: "a partir de", foto: "img/salgados-fritos.webp" }
+  ],
+
+  // Horario de funcionamento (formato 24h)
+  horario: {
+    semana:  { abre: "06:00", fecha: "22:00" },  // segunda a sabado
+    domingo: { abre: "06:30", fecha: "22:00" }
+  },
+
+  // Endereco e contato
+  endereco: "Rua Herdy, 01, Prado",
+  cidade:   "Nova Friburgo, RJ",
+  facilidades: "Estacionamento próprio e acesso para cadeirantes",
+  telefone: "(22) 99963-1850",
+
+  // Avaliacoes do Google (atualize a nota e o total de vez em quando)
+  google: { nota: "4,6", total: "1.561" },
+  depoimentos: [
+    { texto: "Melhor e mais bem servido salgado da cidade. Sanduíches muito mais gostosos e caprichados. Virei cliente e venho quase todo dia lanchar.", nome: "Sérgio C." },
+    { texto: "A padaria se destaca pela qualidade de seus produtos e pelo bom atendimento. Os pães são uma delícia por estarem quentinhos e saborosos.", nome: "Rafael N." },
+    { texto: "Melhor relação custo benefício da região.", nome: "Marcelo V." },
+    { texto: "Excelente café e um bolo super saboroso.", nome: "Douglas D." },
+    { texto: "Muito bom os lanches.", nome: "Evandro D." },
+    { texto: "Ótima padaria.", nome: "Marcia F." }
+  ],
+
+  // Frase e foto do topo, conforme o momento do dia
+  // Foto do Kits Festa (usada se nenhuma foi escolhida no painel)
+  kitsFotoPadrao: "img/mini-salgados.webp",
+
+  // A foto do topo: no painel, marque em cada produto em quais periodos ele aparece no topo
+  momentos: {
+    manha:   { titulo: "O dia começa melhor com pão saindo do forno." },
+    almoco:  { titulo: "Salgados fresquinhos para a sua hora do almoço." },
+    tarde:   { titulo: "Um café, um doce e uma pausa no seu dia." },
+    noite:   { titulo: "Passe aqui antes de voltar para casa." },
+    fechado: { titulo: "Amanhã cedo tem pão saindo do forno." }
+  },
+
+  links: {
+    cardapio:  "cardapio/?de=site",
+    catalogo:  "catalogo/?de=site",
+    kits:      "kitfesta/?de=site",
+    trabalhe:  "trabalheconosco/?de=site",
+    avaliacoes: "https://search.google.com/local/reviews?placeid=ChIJlRnw6xn1lwARYYKwZGiL59k",
+    avaliar:   "https://search.google.com/local/writereview?placeid=ChIJlRnw6xn1lwARYYKwZGiL59k",
+    whatsapp:  "https://wa.me/5522999631850?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20uma%20encomenda%21",
+    instagram: "https://www.instagram.com/padaria.paoetradicao/",
+    mapa:      "https://www.google.com/maps/search/?api=1&query=P%C3%A3o+%26+Tradi%C3%A7%C3%A3o&query_place_id=ChIJlRnw6xn1lwARYYKwZGiL59k"
+  }
+};
+/* ===================== FIM DA AREA DE EDICAO ===================== */
+</script>
+
+<style>
+:root{
+  --azul:#13215E;
+  --dourado:#EFAD4C;
+  --creme:#F5F0DC;
+  --fundo:#FDFBF5;
+  --branco:#FFFFFF;
+  --tinta-suave:#5A6283;
+  --linha:rgba(19,33,94,.1);
+  --serif:'Playfair Display', Georgia, serif;
+  --sans:'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:var(--sans);font-size:1.0625rem;line-height:1.6;color:var(--azul);background:var(--fundo);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--dourado);outline-offset:3px;border-radius:4px}
+.conteiner{width:100%;max-width:1120px;margin:0 auto;padding:0 1.25rem}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.08;letter-spacing:-.01em}
+svg.ic{width:20px;height:20px;flex-shrink:0}
+
+/* ---------- BOTOES ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;min-height:52px;padding:0 1.6rem;border-radius:999px;font-weight:600;font-size:1rem;text-decoration:none;transition:background-color .2s, border-color .2s}
+.btn-ouro{background:var(--dourado);color:var(--azul)}
+.btn-ouro:hover{background:#F4BD6A}
+.btn-azul{background:var(--azul);color:var(--creme)}
+.btn-azul:hover{background:#1D2E7C}
+.btn-contorno{border:1.5px solid rgba(19,33,94,.2);color:var(--azul)}
+.btn-contorno:hover{border-color:var(--azul)}
+.link-sub{font-weight:600;text-decoration:none;border-bottom:2px solid var(--dourado);padding-bottom:1px}
+.link-sub:hover{border-color:var(--azul)}
+
+/* ---------- CABECALHO ---------- */
+.cabecalho{position:sticky;top:0;z-index:20;background:rgba(253,251,245,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:box-shadow .3s}
+.cabecalho.rolado{box-shadow:0 1px 0 var(--linha)}
+.cabecalho .conteiner{display:flex;align-items:center;justify-content:space-between;height:76px;gap:1rem}
+.marca img{height:58px;width:auto}
+.menu{display:none;gap:clamp(1rem,1.8vw,2rem);list-style:none}
+.menu a{text-decoration:none;font-size:.95rem;color:var(--tinta-suave)}
+.menu a:hover{color:var(--azul)}
+.menu-btn{width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(19,33,94,.18);background:transparent;color:var(--azul);display:grid;place-items:center;cursor:pointer}
+.menu-btn svg{width:20px;height:20px}
+.menu-btn path{transition:transform .25s ease, opacity .2s;transform-origin:12px 12px}
+.menu-aberto .menu-btn .l1{transform:translateY(5px) rotate(45deg)}
+.menu-aberto .menu-btn .l2{opacity:0}
+.menu-aberto .menu-btn .l3{transform:translateY(-5px) rotate(-45deg)}
+.menu-celular{display:none;flex-direction:column;padding:.5rem 1.25rem 1rem;border-top:1px solid var(--linha);background:var(--fundo)}
+.menu-aberto .menu-celular{display:flex}
+.menu-celular a{text-decoration:none;font-size:1.05rem;font-weight:600;padding:.8rem 0;border-bottom:1px solid var(--linha)}
+.menu-celular a:last-child{border-bottom:0}
+.cab-acoes{display:flex;align-items:center;gap:.9rem}
+.cab-acoes .btn{min-height:42px;padding:0 1.2rem;font-size:.9rem}
+
+/* status (aberto/fechado) */
+.status{display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap}
+.status i{width:8px;height:8px;border-radius:50%;background:#3FA466;box-shadow:0 0 0 4px rgba(63,164,102,.15)}
+.status.fechado i{background:#C85454;box-shadow:0 0 0 4px rgba(200,84,84,.15)}
+.cab-acoes .status{font-size:.875rem}
+
+/* ---------- TOPO ---------- */
+.hero{padding:2rem 0 3.5rem}
+.hero-grade{display:grid;gap:2.5rem;grid-template-areas:"texto" "info" "foto"}
+.hero-texto{grid-area:texto;align-self:center}
+.hero h1{font-size:clamp(2.4rem, 8.5vw, 4.3rem);max-width:13ch;text-wrap:balance}
+.hero-sub{margin-top:1.1rem;font-size:1.125rem;color:var(--tinta-suave);max-width:44ch}
+.hero-acoes{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.9rem}
+
+.hero-foto{grid-area:foto;justify-self:center;position:relative;width:min(72vw,420px);aspect-ratio:1}
+.aro{position:absolute;inset:0;border-radius:50%;border:6px solid var(--dourado)}
+.aro::before{content:"";position:absolute;inset:6px;border-radius:50%;border:2px solid var(--azul)}
+#hero-foto{position:absolute;inset:20px;width:calc(100% - 40px);height:calc(100% - 40px);border-radius:50%;object-fit:cover;opacity:0;transform:scale(1.03);transition:opacity .9s ease, transform 1.2s ease}
+#hero-foto.pronta{opacity:1;transform:none}
+
+/* ---------- PAINEL HORARIO + LOCAL ---------- */
+.info{grid-area:info;display:grid;background:var(--branco);border:1px solid var(--linha);border-radius:24px}
+.info-bloco{padding:1.4rem 1.5rem;display:flex;gap:1rem;align-items:flex-start}
+.info-bloco + .info-bloco{border-top:1px solid var(--linha)}
+.info-icone{width:42px;height:42px;border-radius:50%;background:var(--creme);display:grid;place-items:center;flex-shrink:0}
+.info-icone svg{width:20px;height:20px}
+.info-rotulo{font-size:.85rem;color:var(--tinta-suave)}
+.info-principal{white-space:nowrap;font-weight:600;font-size:1.05rem;line-height:1.35;margin-top:.1rem}
+.info-extra{font-size:.9rem;color:var(--tinta-suave);margin-top:.15rem}
+.info-bloco .link-sub{display:inline-block;margin-top:.55rem;font-size:.95rem}
+
+/* ---------- SECOES ---------- */
+.secao{padding:5rem 0}
+.titulo-secao{display:flex;align-items:end;justify-content:space-between;gap:1.5rem;margin-bottom:2.5rem}
+.titulo-secao h2{font-size:clamp(2rem,5.5vw,2.9rem)}
+.titulo-secao p{color:var(--tinta-suave);margin-top:.5rem;max-width:42ch}
+
+/* ---------- VITRINE ---------- */
+.setas{display:none;gap:.5rem}
+.seta{width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(19,33,94,.18);background:transparent;color:var(--azul);cursor:pointer;display:grid;place-items:center;transition:border-color .2s}
+.seta:hover{border-color:var(--azul)}
+.seta:disabled{opacity:.3;cursor:default}
+.seta svg{width:20px;height:20px}
+.trilho{min-height:380px;display:grid;grid-auto-flow:column;grid-auto-columns:min(70%,260px);gap:1.5rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.25rem 1.25rem 1rem;margin:0 -1.25rem;scrollbar-width:none;overscroll-behavior-x:contain;scroll-padding-inline:1.25rem}
+.trilho::-webkit-scrollbar{display:none}
+.produto{scroll-snap-align:start;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center}
+.produto-foto{width:100%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--creme);transition:transform .35s ease}
+.produto-foto img{width:100%;height:100%;object-fit:cover}
+.produto:hover .produto-foto{transform:translateY(-4px)}
+.produto h3{font-size:1.45rem;margin-top:1.3rem}
+.produto p{font-size:.95rem;color:var(--tinta-suave);margin:.3rem 0 .9rem;max-width:26ch}
+.preco{margin-top:auto;display:flex;align-items:baseline;gap:.45rem}
+.preco small{font-size:.85rem;color:var(--tinta-suave)}
+.preco strong{font-family:var(--serif);font-size:1.55rem;font-weight:600;border-bottom:3px solid var(--dourado);line-height:1.2}
+.nota-vitrine{margin-top:1.75rem;font-size:.95rem;color:var(--tinta-suave);text-align:center}
+
+/* ---------- ENCOMENDAS ---------- */
+.enc-grade{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.enc-cat{display:flex;flex-direction:column;background:var(--branco);border:1px solid var(--linha);border-radius:22px;overflow:hidden;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease}
+.enc-cat:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(19,33,94,.35)}
+.enc-foto{display:block;aspect-ratio:4/3;background:#fff center/cover no-repeat}
+.enc-foto.vazia{background:var(--creme)}
+.enc-rot{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.9rem 1.1rem}
+.enc-rot b{font-family:var(--serif);font-weight:600;font-size:1.35rem;line-height:1.1}
+.enc-rot i{font-style:normal;width:32px;height:32px;border-radius:50%;background:var(--dourado);color:var(--azul);display:grid;place-items:center;font-size:1.2rem;font-weight:600;flex-shrink:0}
+.enc-todos{white-space:nowrap}
+@media (min-width:720px){.enc-grade{grid-template-columns:repeat(4,1fr);gap:1.25rem}}
+@media (max-width:719px){
+  .titulo-secao:has(.enc-todos){flex-direction:column;align-items:stretch;gap:1rem}
+  .enc-grade{gap:.75rem}
+  .enc-rot{padding:.65rem .8rem}
+  .enc-rot b{font-size:1.1rem}
+  .enc-rot i{width:28px;height:28px;font-size:1.05rem}
+}
+
+/* ---------- DEPOIMENTOS ---------- */
+.depoimentos{padding:1rem 0 5rem}
+.depo-grade{display:grid;gap:2rem}
+.nota{display:grid;align-content:start;gap:.4rem}
+.nota h2{font-size:clamp(2rem,5.5vw,2.9rem);margin-bottom:.75rem}
+.nota-numero{display:flex;align-items:center;gap:.9rem}
+.nota-numero strong,.preco strong,.historia-anos{font-optical-sizing:none;font-variation-settings:"opsz" 11}
+.nota-numero strong{font-family:var(--serif);font-weight:600;font-size:4rem;line-height:1}
+.estrelas{display:flex;gap:2px;color:var(--dourado)}
+.estrelas svg{width:20px;height:20px}
+.nota p{color:var(--tinta-suave)}
+.nota-links{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1.25rem;max-width:400px}
+.nota-links .btn{min-height:46px;font-size:.95rem;padding:0 .8rem;white-space:nowrap}
+.depo-lista{display:grid;gap:1rem}
+.depo{background:var(--branco);border:1px solid var(--linha);border-radius:24px;padding:1.5rem 1.6rem;display:flex;flex-direction:column;gap:1rem}
+.depo blockquote{font-size:1.05rem;line-height:1.55}
+.depo footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.875rem;color:var(--tinta-suave)}
+.depo footer b{color:var(--azul);font-weight:600}
+.depo .estrelas svg{width:15px;height:15px}
+
+/* ---------- BARRA FIXA (CELULAR) ---------- */
+
+/* ---------- KITS FESTA ---------- */
+.kits{padding:0 0 5rem}
+.kits-caixa{display:grid;gap:2rem;align-items:center;background:var(--dourado);border-radius:32px;padding:2.5rem 1.75rem;overflow:hidden}
+.kits h2{font-size:clamp(2.2rem,6.5vw,3.4rem)}
+.kits p{margin-top:1rem;font-size:1.1rem;max-width:36ch;color:rgba(19,33,94,.85)}
+.kits-passos{list-style:none;margin-top:1.5rem;display:grid;gap:.5rem}
+.kits-passos{gap:.9rem !important}
+.kits-passos li{display:flex;align-items:flex-start;gap:.8rem;font-weight:600;line-height:1.3}
+.kits-passos li small{display:block;font-weight:400;font-size:.92rem;color:rgba(19,33,94,.78);margin-top:.1rem}
+.kits-passos span{width:28px;height:28px;border-radius:50%;background:var(--azul);color:var(--dourado);display:grid;place-items:center;font-size:.85rem;flex-shrink:0}
+.kits-acoes{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.5rem;margin-top:2rem}
+.kits-acoes .link-sub{border-color:var(--azul)}
+.kits-foto{justify-self:center;width:min(64vw,340px);aspect-ratio:1;border-radius:50%;border:6px solid var(--fundo);overflow:hidden}
+.kits-foto img{width:100%;height:100%;object-fit:cover}
+
+/* ---------- HISTORIA ---------- */
+.historia{background:var(--creme)}
+.historia .conteiner{max-width:720px;text-align:center;display:grid;justify-items:center}
+.historia-selo{width:72px;height:72px;border-radius:50%}
+.historia h2{font-size:clamp(2rem,5.5vw,3rem);margin-top:1.5rem}
+.historia p{margin-top:1.1rem;color:var(--tinta-suave);max-width:52ch;font-size:1.1rem}
+.historia-anos{margin-top:2rem;padding-top:1.5rem;border-top:3px solid var(--dourado);font-family:var(--serif);font-weight:600;font-size:1.35rem}
+
+/* ---------- TRABALHE CONOSCO ---------- */
+.trabalhe-caixa{display:grid;gap:2rem;align-items:center;background:var(--branco);border:1px solid var(--linha);border-radius:32px;padding:2.5rem 1.75rem}
+.trabalhe h2{font-size:clamp(2rem,5.5vw,2.9rem)}
+.trabalhe p{margin-top:1rem;color:var(--tinta-suave);max-width:46ch}
+.trabalhe .btn{justify-self:start}
+.kits-passos small strong{font-weight:600;color:var(--azul)}
+
+/* ---------- RODAPE ---------- */
+.rodape{background:var(--azul);color:rgba(245,240,220,.7);padding:2.5rem 0;font-size:.85rem}
+.rodape .conteiner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem}
+.rodape img{width:84px;height:auto}
+.rodape a{display:inline-flex;align-items:center;gap:.5rem;color:var(--creme);text-decoration:none;font-size:.95rem}
+.rodape a:hover{color:var(--dourado)}
+
+/* ---------- TELAS MAIORES ---------- */
+@media (min-width:720px){
+  body{padding-bottom:0}
+  .depo-lista{grid-template-columns:1fr 1fr}
+  .info{grid-template-columns:repeat(3,1fr)}
+  .info-bloco + .info-bloco{border-top:0;border-left:1px solid var(--linha)}
+  .info-bloco{flex-direction:column;gap:.9rem;padding:1.6rem 1.75rem}
+  .setas{display:flex}
+  .trilho{grid-auto-columns:240px;padding:.25rem 0 1rem;margin:0}
+}
+@media (min-width:960px){
+  .menu{display:flex}
+  .menu-btn,.menu-celular,.menu-aberto .menu-celular{display:none}
+  .hero{padding:3rem 0 4.5rem}
+  .hero-grade{grid-template-columns:1.1fr .9fr;grid-template-areas:"texto foto" "info info";row-gap:3.5rem}
+  .hero-foto{justify-self:end}
+  .kits-caixa{grid-template-columns:1.2fr .8fr;padding:4rem}
+  .kits-foto{justify-self:end}
+  .trabalhe-caixa{grid-template-columns:1fr auto;gap:3rem;padding:3.5rem 4rem}
+  .secao{padding:6rem 0}
+  .depo-grade{grid-template-columns:.8fr 1.2fr;gap:4rem;align-items:start}
+  .nota{position:sticky;top:110px}
+  .depo-lista{grid-template-columns:1fr;max-height:560px;overflow-y:auto;padding:0 .75rem 2.5rem 0;scrollbar-width:thin;scrollbar-color:rgba(19,33,94,.25) transparent;
+    -webkit-mask-image:linear-gradient(to bottom,#000 85%,transparent);mask-image:linear-gradient(to bottom,#000 85%,transparent)}
+}
+@media (max-width:440px){
+  .cab-acoes .btn{display:none}
+}
+/* ---------- TELA LARGA: AVALIACOES NA LATERAL ---------- */
+.lateral{display:none}
+@media (min-width:1500px){
+  body{padding-right:380px}
+  .lateral{display:block;position:fixed;top:0;right:0;bottom:0;width:380px;z-index:25;background:var(--branco);border-left:1px solid var(--linha);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(19,33,94,.2) transparent}
+  .lateral .depoimentos{padding:2.25rem 1.75rem 2.5rem}
+  .lateral .conteiner{padding:0;max-width:none}
+  .lateral .depo-grade{grid-template-columns:1fr;gap:1.75rem}
+  .lateral .nota{position:static}
+  .lateral .nota h2{font-size:1.9rem;margin-bottom:.4rem}
+  .lateral .nota-numero strong{font-size:3rem}
+  .lateral .nota p{font-size:.9rem}
+  .lateral .nota-links{max-width:none}
+  .lateral .nota-links .btn{min-height:42px;font-size:.875rem;padding:0 .6rem}
+  .lateral .depo-lista{grid-template-columns:1fr;max-height:none;overflow:visible;padding:0;-webkit-mask-image:none;mask-image:none;gap:.75rem}
+  .lateral .depo{padding:1.1rem 1.2rem;border-radius:18px;gap:.7rem;background:var(--fundo)}
+  .lateral .depo blockquote{font-size:.95rem}
+  .lateral .depo footer{font-size:.8rem}
+}
+
+/* ---------- CELULAR ---------- */
+@media (max-width:719px){
+  body{font-size:1rem}
+  h1,h2,h3,.preco strong,.nota-numero strong,.historia-anos{font-optical-sizing:none;font-variation-settings:"opsz" 11}
+  .cabecalho .conteiner{height:64px}
+  .marca img{height:48px}
+  html{scroll-padding-top:72px}
+
+  .hero{padding:1.25rem 0 2.5rem}
+  .hero-grade{grid-template-columns:1fr auto;grid-template-areas:"titulo foto" "sub sub" "acoes acoes" "info info";column-gap:1rem;row-gap:0;align-items:center}
+  .hero-texto{display:contents}
+  .hero h1{grid-area:titulo;font-size:1.75rem;max-width:none;text-wrap:balance}
+  .hero-sub{grid-area:sub;font-size:.95rem;margin-top:1.1rem;max-width:none}
+  .hero-acoes{grid-area:acoes;margin-top:1.25rem;gap:.6rem;flex-wrap:nowrap}
+  .hero-acoes .btn{flex:1;white-space:nowrap;padding:0 .9rem;font-size:.92rem}
+  .hero-acoes .btn:first-child{flex:1.45}
+  .info{margin-top:1.75rem}
+  .hero-acoes .btn{min-height:46px;padding:0 1.2rem;font-size:.95rem}
+  .hero-foto{width:clamp(112px,32vw,150px)}
+  .aro{border-width:4px}
+  .aro::before{inset:4px;border-width:1.5px}
+  #hero-foto{inset:11px;width:calc(100% - 22px);height:calc(100% - 22px)}
+
+  .info{border-radius:20px}
+  .info-bloco{padding:1.1rem 1.2rem;gap:.85rem}
+  .info-icone{width:36px;height:36px}
+  .info-icone svg{width:18px;height:18px}
+  .info-principal{font-size:1rem;white-space:normal}
+  .info-extra,.info-rotulo{font-size:.85rem}
+  .info-bloco .link-sub{font-size:.9rem;margin-top:.45rem}
+
+  .secao{padding:3.5rem 0}
+  .titulo-secao{margin-bottom:1.5rem}
+  .titulo-secao h2,.nota h2,.historia h2,.trabalhe h2{font-size:1.85rem}
+  .titulo-secao p{font-size:.95rem}
+  .trilho{grid-auto-columns:62%;gap:1rem}
+  .produto h3{font-size:1.2rem;margin-top:1rem}
+  .produto p{font-size:.875rem;margin-bottom:.7rem}
+  .preco strong{font-size:1.3rem}
+  .preco small{font-size:.8rem}
+  .nota-vitrine{font-size:.9rem;margin-top:1.25rem}
+
+  .depoimentos{padding:.5rem 0 3.5rem}
+  .depo-grade{gap:1.5rem}
+  .nota-numero strong{font-size:3rem}
+  .nota p{font-size:.95rem}
+  .nota-links{max-width:none}
+  .nota-links .btn{font-size:.9rem;min-height:44px}
+  .depo{padding:1.2rem 1.25rem;border-radius:20px;gap:.75rem}
+  .depo blockquote{font-size:.95rem}
+  .depo footer{font-size:.8rem}
+
+  .kits{padding-bottom:3.5rem}
+  .kits-caixa{padding:2rem 1.4rem;border-radius:24px;gap:1.5rem}
+  .kits h2{font-size:2rem}
+  .kits p{font-size:.95rem;margin-top:.75rem}
+  .kits-passos{margin-top:1.25rem}
+  .kits-passos li{font-size:.95rem}
+  .kits-passos li small{font-size:.85rem}
+  .kits-passos span{width:26px;height:26px;font-size:.8rem}
+  .kits-acoes{margin-top:1.5rem;gap:.9rem 1.25rem}
+  .kits-acoes .btn{min-height:46px}
+  .kits-acoes .link-sub{font-size:.9rem}
+  .kits-foto{width:min(56vw,230px);border-width:5px}
+
+  .historia-selo{width:56px;height:56px}
+  .historia h2{margin-top:1.1rem}
+  .historia p{font-size:.95rem}
+  .historia-anos{font-size:1.1rem;margin-top:1.5rem;padding-top:1.1rem}
+
+  .trabalhe-caixa{padding:1.75rem 1.4rem;border-radius:24px;gap:1.25rem}
+  .trabalhe p{font-size:.95rem}
+  .trabalhe .btn{min-height:46px}
+
+  .rodape{padding:2rem 0}
+  .rodape .conteiner{justify-content:center;gap:1rem 1.25rem}
+  .rodape .conteiner > span{flex-basis:100%;text-align:center;margin-top:.25rem}
+  .rodape img{width:72px;height:auto}
+
+}
+
+/* ---------- AJUSTES 2026: tela toda, botoes de pedido, modo escuro ---------- */
+.conteiner{max-width:1760px;padding:0 clamp(1.25rem,4vw,4rem)}
+.historia .conteiner{max-width:760px}
+.hero-acoes .btn-ouro{order:0}
+@media (min-width:720px) and (max-width:1199px){.hero-acoes{flex-wrap:nowrap}.hero-acoes .btn{padding:0 1.1rem;font-size:.95rem}}
+@media (max-width:719px){
+  .hero-acoes{display:grid !important;grid-template-columns:1fr 1fr;gap:.6rem}
+  .hero-acoes .btn{padding:0 .6rem !important}
+  .hero-acoes .btn-contorno{grid-column:1 / -1;min-height:42px !important}
+}
+
+:root{color-scheme:light dark}
+img,picture,svg{forced-color-adjust:none}
+@media (prefers-color-scheme: dark){
+  :root{--azul:#F1F2F6;--fundo:#0D1226;--branco:#141A33;--creme:#1A2140;--tinta-suave:#A3AABD;--linha:#262E4D}
+  .cabecalho{background:rgba(19,33,94,.97);border-bottom:2px solid var(--dourado)}
+  .cabecalho.rolado{box-shadow:none}
+  .menu a{color:#CDD2DF}.menu a:hover{color:#fff}
+  .menu-btn{border-color:rgba(245,240,220,.35);color:#F5F0DC}
+  .cab-acoes .status{color:#F5F0DC}
+  .menu-celular{background:#13215E}
+  .menu-celular a{color:#F5F0DC;border-color:rgba(245,240,220,.15)}
+  .btn-azul{background:var(--dourado);color:#13215E}
+  .btn-azul:hover{background:#F4BD6A}
+  .btn-ouro{background:#F5F0DC;color:#13215E}
+  .btn-contorno{border-color:rgba(241,242,246,.3);color:#F1F2F6}
+  .aro::before{border-color:#F5F0DC}
+  .kits-caixa{color:#13215E}
+  .kits-caixa h2{color:#13215E}
+  .kits-passos span{background:#13215E;color:var(--dourado)}
+  .kits-acoes .btn-azul{background:#13215E;color:#F5F0DC}
+  .kits-acoes .link-sub{color:#13215E}
+  .kits-foto{border-color:#0D1226}
+  .rodape{background:#13215E;border-top:2px solid var(--dourado)}
+  .rodape a{color:#F5F0DC}
+  .enc-foto,.produto-foto{background-color:#fff}
+}
+
+/* WhatsApp flutuante (celular): unico atalho fixo, sem repetir os botoes da pagina */
+
+.wpp-flutuante{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;width:60px;height:60px;border-radius:14px;overflow:hidden;display:block;box-shadow:0 10px 24px -8px rgba(0,0,0,.45)}
+.wpp-flutuante img{width:100%;height:100%;display:block}
+@media (min-width:720px){.wpp-flutuante{display:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;scroll-behavior:auto !important}
+  #hero-foto{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="cabecalho" id="cabecalho">
+  <div class="conteiner">
+    <a class="marca" href="#topo" aria-label="Pão & Tradição, início">
+      <picture><source srcset="img/logo-creme.webp" media="(prefers-color-scheme: dark)"><img src="img/logo.webp" alt="Pão & Tradição" width="61" height="58"></picture>
+    </a>
+    <ul class="menu">
+      <li><a href="#vitrine">Vitrine</a></li>
+      <li><a data-link="cardapio" href="#">Cardápio</a></li>
+      <li><a href="#encomendas">Encomendas</a></li>
+      <li><a href="#kits">Kits Festa</a></li>
+      <li><a href="#avaliacoes">Avaliações</a></li>
+      <li><a href="#historia">Nossa história</a></li>
+      <li><a href="#trabalhe">Trabalhe conosco</a></li>
+    </ul>
+    <div class="cab-acoes">
+      <span class="status" data-status><i></i><span data-status-curto></span></span>
+      <button class="menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-celular">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path class="l1" d="M4 7h16"/><path class="l2" d="M4 12h16"/><path class="l3" d="M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="menu-celular" id="menu-celular" aria-label="Menu">
+    <a href="#vitrine">Vitrine</a>
+    <a data-link="cardapio" href="#">Cardápio</a>
+    <a href="#encomendas">Encomendas</a>
+    <a href="#kits">Kits Festa</a>
+    <a href="#avaliacoes">Avaliações</a>
+    <a href="#historia">Nossa história</a>
+    <a href="#trabalhe">Trabalhe conosco</a>
+    <a href="#info">Horário e endereço</a>
+  </nav>
+</header>
+
+<main id="topo">
+
+  <section class="hero">
+    <div class="conteiner hero-grade">
+      <div class="hero-texto">
+        <h1 id="hero-titulo" class="txt-editavel">O dia começa melhor com pão saindo do forno.</h1>
+        <p class="hero-sub txt-editavel">Há mais de 20 anos no Prado, em Nova Friburgo, fazendo parte da rotina de quem é daqui e recebendo quem chega com sabores, tradição e aquele motivo especial para voltar.</p>
+        <div class="hero-acoes">
+          <a class="btn btn-azul" data-link="cardapio" href="#">Ver cardápio</a>
+          <a class="btn btn-ouro" data-link="catalogo" href="#">Fazer encomenda</a>
+          <a class="btn btn-contorno" href="#kits">Kits Festa</a>
+        </div>
+      </div>
+
+      <div class="hero-foto">
+        <span class="aro" aria-hidden="true"></span>
+        <img id="hero-foto" alt="" width="720" height="720" fetchpriority="high">
+      </div>
+
+      <div class="info" id="info">
+        <div class="info-bloco">
+          <span class="info-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div>
+            <div class="info-rotulo status" data-status><i></i><span data-status-longo></span></div>
+            <div class="info-principal" id="horario-hoje"></div>
+            <div class="info-extra" id="horario-outro"></div>
+          </div>
+        </div>
+        <div class="info-bloco">
+          <span class="info-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <div>
+            <div class="info-rotulo">Onde estamos</div>
+            <div class="info-principal" data-texto="endereco"></div>
+            <div class="info-extra" data-texto="cidade"></div>
+            <div class="info-extra" data-texto="facilidades"></div>
+            <a class="link-sub" data-link="mapa" href="#" target="_blank" rel="noopener">Como chegar</a>
+          </div>
+        </div>
+        <div class="info-bloco">
+          <span class="info-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5Z"/></svg></span>
+          <div>
+            <div class="info-rotulo">Encomendas e contato</div>
+            <div class="info-principal" data-texto="telefone"></div>
+            <div class="info-extra">WhatsApp</div>
+            <a class="link-sub" data-link="whatsapp" href="#" target="_blank" rel="noopener">Enviar mensagem</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao" id="vitrine" style="padding-top:2rem">
+    <div class="conteiner">
+      <div class="titulo-secao">
+        <div>
+          <h2>Hoje na vitrine</h2>
+          <p>Uma amostra do que sai da nossa cozinha todos os dias.</p>
+        </div>
+        <div class="setas">
+          <button class="seta" id="seta-ant" aria-label="Produtos anteriores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button class="seta" id="seta-prox" aria-label="Próximos produtos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+        </div>
+      </div>
+      <div class="trilho" id="trilho"></div>
+      <p class="nota-vitrine">Tem muito mais no balcão. <a class="link-sub" data-link="cardapio" href="#">Ver cardápio completo</a></p>
+    </div>
+  </section>
+
+  <section class="secao encomendas" id="encomendas" style="padding-top:1rem">
+    <div class="conteiner">
+      <div class="titulo-secao">
+        <div>
+          <h2>Encomendas</h2>
+          <p>Tortas, pães, salgados e doces para a sua festa ou para o dia a dia. Escolha no catálogo e envie o pedido pelo WhatsApp.</p>
+        </div>
+        <a class="btn btn-azul enc-todos" data-link="catalogo" href="#">Ver catálogo</a>
+      </div>
+      <div class="enc-grade">
+        <a class="enc-cat" data-cat="tortas" data-foto="QnxT21Olf2x1w3bsCR9n" href="#"><span class="enc-foto"></span><span class="enc-rot"><b>Tortas</b><i aria-hidden="true">&rsaquo;</i></span></a>
+        <a class="enc-cat" data-cat="paes" data-foto="6vaDBYlz7bkTdppCsvii" href="#"><span class="enc-foto"></span><span class="enc-rot"><b>Pães</b><i aria-hidden="true">&rsaquo;</i></span></a>
+        <a class="enc-cat" data-cat="salgados" data-foto="WgZO44Hq4QHlzHUqsWfG" href="#"><span class="enc-foto"></span><span class="enc-rot"><b>Salgados</b><i aria-hidden="true">&rsaquo;</i></span></a>
+        <a class="enc-cat" data-cat="doces" data-foto="87gSziKdBZGlrCh4ybPG" href="#"><span class="enc-foto"></span><span class="enc-rot"><b>Doces</b><i aria-hidden="true">&rsaquo;</i></span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="kits" id="kits">
+    <div class="conteiner">
+      <div class="kits-caixa">
+        <div>
+          <h2>Kits Festa</h2>
+          <p>Kits prontos para o seu aniversário, reunião ou evento, com tamanho certo para o número de convidados.</p>
+          <ol class="kits-passos">
+            <li><span>1</span><div>Escolha o kit<small>pelo número de convidados</small></div></li>
+            <li><span>2</span><div>Aumente a festa<small>inclua adicionais e deixe o kit com a cara <strong>da sua festa</strong></small></div></li>
+            <li><span>3</span><div>Confirme seu pedido<small>e pronto, a gente prepara tudo</small></div></li>
+          </ol>
+          <div class="kits-acoes">
+            <a class="btn btn-azul" data-link="kits" href="#">Montar meu kit</a>
+            <a class="link-sub" data-link="whatsapp" href="#" target="_blank" rel="noopener">Prefiro encomendar pelo WhatsApp</a>
+          </div>
+        </div>
+        <div class="kits-foto">
+          <img id="kits-foto" alt="Kits Festa Pão & Tradição" width="720" height="720" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="depoimentos" id="avaliacoes">
+    <div class="conteiner depo-grade">
+      <div class="nota">
+        <h2>Quem prova, volta</h2>
+        <div class="nota-numero"><strong data-google="nota"></strong><span class="estrelas" data-estrelas></span></div>
+        <p><span data-google="total"></span> avaliações no Google</p>
+        <div class="nota-links">
+          <a class="btn btn-contorno" data-link="avaliacoes" href="#" target="_blank" rel="noopener">Ver no Google</a>
+          <a class="btn btn-azul" data-link="avaliar" href="#" target="_blank" rel="noopener">Deixar avaliação</a>
+        </div>
+      </div>
+      <div class="depo-lista" id="depo-lista"></div>
+    </div>
+  </section>
+
+
+  <section class="secao historia" id="historia">
+    <div class="conteiner">
+      <img class="historia-selo" src="img/selo-dourado.webp" alt="" width="72" height="72" loading="lazy">
+      <h2>O mesmo cuidado,<br>fornada após fornada.</h2>
+      <p>Todo dia, bem cedo, o Prado acorda com o cheiro do nosso pão saindo do forno. Somos uma padaria de bairro que cresceu junto com Nova Friburgo, sem perder o que nos trouxe até aqui: receitas bem feitas, atenção aos detalhes e o gosto de receber bem quem entra pela nossa porta.</p>
+      <div class="historia-anos">Desde 2004 em Nova Friburgo</div>
+    </div>
+  </section>
+
+  <section class="secao trabalhe" id="trabalhe">
+    <div class="conteiner">
+      <div class="trabalhe-caixa">
+        <div>
+          <h2>Trabalhe conosco</h2>
+          <p>Cada fornada passa pelas mãos de uma equipe que gosta do que faz. Se você tem vontade de aprender, capricho no que entrega e gosta de receber bem as pessoas, queremos te conhecer.</p>
+        </div>
+        <a class="btn btn-azul" data-link="trabalhe" href="#">Enviar meu currículo</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<aside class="lateral" id="lateral" aria-label="Avaliações dos clientes"></aside>
+
+<a class="wpp-flutuante" data-link="whatsapp" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><img src="data:image/png;base64,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" alt="" width="60" height="60"></a>
+
+<footer class="rodape">
+  <div class="conteiner">
+    <img src="img/logo-creme.webp" alt="Pão & Tradição" width="84" height="79" loading="lazy">
+    <a data-link="instagram" href="#" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>@padaria.paoetradicao</a>
+    <span>© <span id="ano">2026</span> Pão & Tradição</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+
+  // Avaliacoes
+  const estrela = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"/></svg>';
+  document.querySelectorAll('[data-estrelas]').forEach(el => { el.innerHTML = estrela.repeat(5); el.setAttribute('aria-label', '5 estrelas'); });
+  document.querySelectorAll('[data-google]').forEach(el => { el.textContent = CONFIG.google[el.dataset.google]; });
+  const dl = document.getElementById('depo-lista');
+  CONFIG.depoimentos.forEach(d => {
+    const f = document.createElement('figure'); f.className = 'depo';
+    const q = document.createElement('blockquote'); q.textContent = d.texto;
+    const ft = document.createElement('footer');
+    const n = document.createElement('span'); n.innerHTML = '<b></b> no Google'; n.querySelector('b').textContent = d.nome;
+    const e = document.createElement('span'); e.className = 'estrelas'; e.innerHTML = estrela.repeat(5);
+    ft.append(n, e); f.append(q, ft); dl.appendChild(f);
+  });
+
+  // Dados para o Google (horario, endereco, telefone)
+  const ld = {
+    '@context': 'https://schema.org', '@type': 'Bakery',
+    name: 'Pão & Tradição', url: 'https://www.padariapaoetradicao.com.br/',
+    image: 'https://padariapaoetradicao.com.br/img/compartilhar.jpg',
+    telephone: '+55 ' + CONFIG.telefone,
+    foundingDate: '2004',
+    priceRange: 'R$',
+    address: { '@type': 'PostalAddress', streetAddress: CONFIG.endereco, addressLocality: 'Nova Friburgo', addressRegion: 'RJ', postalCode: '28635-160', addressCountry: 'BR' },
+    amenityFeature: [
+      { '@type': 'LocationFeatureSpecification', name: 'Estacionamento próprio', value: true },
+      { '@type': 'LocationFeatureSpecification', name: 'Acessível para cadeirantes', value: true }
+    ],
+    geo: { '@type': 'GeoCoordinates', latitude: -22.2371058, longitude: -42.5203922 },
+    sameAs: [CONFIG.links.instagram],
+    openingHoursSpecification: [
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], opens: CONFIG.horario.semana.abre, closes: CONFIG.horario.semana.fecha },
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Sunday', opens: CONFIG.horario.domingo.abre, closes: CONFIG.horario.domingo.fecha }
+    ]
+  };
+  const sc = document.createElement('script'); sc.type = 'application/ld+json'; sc.textContent = JSON.stringify(ld);
+  document.head.appendChild(sc);
+
+  // Links e textos da area de edicao
+  $$('[data-link]').forEach(a => { const u = CONFIG.links[a.dataset.link]; if (u) a.href = u; });
+  $$('[data-texto]').forEach(el => { el.textContent = CONFIG[el.dataset.texto] || ''; });
+  $('#ano').textContent = new Date().getFullYear();
+
+  // Encomendas: cada categoria abre direto no catalogo
+  $$('.enc-cat').forEach(a => {
+    a.href = CONFIG.links.catalogo + '#' + a.dataset.cat;
+    const span = a.querySelector('.enc-foto');
+    const fb = CONFIG.firebase || {};
+    fetch('https://firestore.googleapis.com/v1/projects/' + fb.projectId + '/databases/(default)/documents/vitrine/' + a.dataset.foto + '?mask.fieldPaths=imagens&key=' + fb.apiKey)
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        const v = j && j.fields && j.fields.imagens && j.fields.imagens.arrayValue && j.fields.imagens.arrayValue.values;
+        if (v && v[0] && v[0].stringValue) span.style.backgroundImage = 'url("' + v[0].stringValue + '")'; else span.classList.add('vazia');
+      })
+      .catch(() => span.classList.add('vazia'));
+  });
+
+  // Vitrine
+  const trilho = $('#trilho');
+  function montarVitrine(lista){
+    trilho.textContent = '';
+    lista.forEach(p => {
+      const a = document.createElement('a');
+      a.className = 'produto';
+      a.href = CONFIG.links.cardapio;
+      const foto = document.createElement('div'); foto.className = 'produto-foto';
+      const img = document.createElement('img');
+      img.src = p.foto; img.alt = p.nome; img.loading = 'lazy'; img.width = 260; img.height = 260;
+      foto.appendChild(img);
+      const h = document.createElement('h3'); h.textContent = p.nome;
+      const d = document.createElement('p'); d.textContent = p.descricao;
+      const pr = document.createElement('div'); pr.className = 'preco';
+      const s = document.createElement('small'); s.textContent = p.obs || '';
+      const st = document.createElement('strong'); st.textContent = p.preco;
+      if ((p.obs || '').toLowerCase().startsWith('a partir')) pr.append(s, st); else pr.append(st, s);
+      a.append(foto, h, d, pr);
+      trilho.appendChild(a);
+    });
+    setas();
+  }
+  let siteConfig = {};
+  // Troca as fotos do Kits Festa com um esmaecido suave
+  function rodizioFotos(img, fotos){
+    let i = 0; img.src = fotos[0];
+    if (fotos.length < 2) return;
+    img.style.transition = 'opacity .6s ease';
+    setInterval(() => {
+      i = (i + 1) % fotos.length;
+      const pre = new Image();
+      pre.onload = () => { img.style.opacity = 0; setTimeout(() => { img.src = fotos[i]; img.style.opacity = 1; }, 600); };
+      pre.src = fotos[i];
+    }, 4500);
+  }
+  async function carregarVitrine(){
+    const fb = CONFIG.firebase || {};
+    siteConfig = {};
+    if (!fb.projectId) return CONFIG.vitrine;
+    try {
+      const url = 'https://firestore.googleapis.com/v1/projects/' + fb.projectId +
+        '/databases/(default)/documents/vitrine?pageSize=100&' +
+        ['nome','descricao','preco','obs','foto','ordem','ativo','tipo','momentos','kitsFotos','kitsFoto'].map(c => 'mask.fieldPaths=' + c).join('&') +
+        '&key=' + fb.apiKey;
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      const docs = j.documents || [];
+      const cfgDoc = docs.find(d => d.name.endsWith('/config-site'));
+      if (cfgDoc && cfgDoc.fields) {
+        const cf = cfgDoc.fields;
+        const arr = cf.kitsFotos && cf.kitsFotos.arrayValue && cf.kitsFotos.arrayValue.values;
+        siteConfig.kitsFotos = arr ? arr.map(v => v.stringValue).filter(Boolean) : [];
+        if (!siteConfig.kitsFotos.length && cf.kitsFoto && cf.kitsFoto.stringValue) siteConfig.kitsFotos = [cf.kitsFoto.stringValue];
+      }
+      const lista = docs.filter(d => d !== cfgDoc && !(d.fields && d.fields.tipo)).map(doc => {
+        const f = doc.fields || {};
+        const mom = f.momentos && f.momentos.arrayValue && f.momentos.arrayValue.values;
+        const v = k => f[k] ? (f[k].stringValue ?? f[k].integerValue ?? f[k].doubleValue ?? f[k].booleanValue) : undefined;
+        return { nome: v('nome') || '', descricao: v('descricao') || '', preco: v('preco') || '', obs: v('obs') || '',
+                 foto: v('foto') || '', ordem: Number(v('ordem') || 0), ativo: v('ativo') !== false,
+                 momentos: mom ? mom.map(x => x.stringValue) : [] };
+      }).filter(p => p.ativo && p.nome).sort((a, b) => a.ordem - b.ordem);
+      return lista.length ? lista : CONFIG.vitrine;
+    } catch (e) {
+      return CONFIG.vitrine;
+    }
+  }
+  const ant = $('#seta-ant'), prox = $('#seta-prox');
+  const passo = () => (trilho.firstElementChild ? trilho.firstElementChild.offsetWidth + 24 : 260);
+  ant.onclick = () => trilho.scrollBy({left: -passo(), behavior: 'smooth'});
+  prox.onclick = () => trilho.scrollBy({left: passo(), behavior: 'smooth'});
+  const setas = () => {
+    ant.disabled = trilho.scrollLeft < 8;
+    prox.disabled = trilho.scrollLeft + trilho.clientWidth >= trilho.scrollWidth - 8;
+  };
+  trilho.addEventListener('scroll', setas, {passive: true});
+  window.addEventListener('resize', setas);
+  // Foto do topo: rodizio por hora entre os produtos da vitrine
+  let listaHero = [];
+  const fotoHero = $('#hero-foto');
+  fotoHero.addEventListener('load', () => fotoHero.classList.add('pronta'));
+  // Foto do topo: produtos marcados para o periodo atual (manha, almoco, tarde, noite);
+  // se nenhum estiver marcado, reveza entre todos
+  let momentoAtual = '';
+  function trocarFotoHero(){
+    if (!listaHero.length) return;
+    const doPeriodo = listaHero.filter(p => p.momentos && p.momentos.includes(momentoAtual));
+    const opcoes = doPeriodo.length ? doPeriodo : listaHero;
+    const p = opcoes[Math.floor(Date.now() / 3600000) % opcoes.length];
+    if (fotoHero.getAttribute('src') === p.foto) return;
+    fotoHero.classList.remove('pronta');
+    fotoHero.alt = p.nome;
+    fotoHero.src = p.foto;
+  }
+  carregarVitrine().then(lista => {
+    montarVitrine(lista);
+    rodizioFotos($('#kits-foto'), (siteConfig.kitsFotos && siteConfig.kitsFotos.length) ? siteConfig.kitsFotos : [CONFIG.kitsFotoPadrao]);
+    listaHero = lista.filter(p => p.foto);
+    trocarFotoHero();
+  });
+
+  // Horario e status
+  const min = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  const curto = t => { const [h, m] = t.split(':').map(Number); return h + 'h' + (m ? String(m).padStart(2, '0') : ''); };
+  const doDia = d => d === 0 ? CONFIG.horario.domingo : CONFIG.horario.semana;
+  const faixa = h => h.abre + ' às ' + h.fecha;
+
+  function atualizar(){
+    const agora = new Date();
+    const dia = agora.getDay();
+    const m = agora.getHours() * 60 + agora.getMinutes();
+    const h = doDia(dia);
+    const aberto = m >= min(h.abre) && m < min(h.fecha);
+
+    let curtoTxt, longoTxt, momento;
+    if (aberto) {
+      curtoTxt = 'Aberto';
+      longoTxt = 'Aberto agora';
+      momento = m < 11 * 60 ? 'manha' : m < 14 * 60 ? 'almoco' : m < 18 * 60 ? 'tarde' : 'noite';
+    } else {
+      const antes = m < min(h.abre);
+      const p = antes ? h : doDia((dia + 1) % 7);
+      curtoTxt = 'Fechado';
+      longoTxt = 'Fechado, abrimos ' + (antes ? 'hoje' : 'amanhã') + ' às ' + curto(p.abre);
+      momento = 'fechado';
+    }
+    $$('[data-status]').forEach(el => el.classList.toggle('fechado', !aberto));
+    $$('[data-status-curto]').forEach(el => el.textContent = curtoTxt);
+    $$('[data-status-longo]').forEach(el => el.textContent = longoTxt);
+
+    const s = CONFIG.horario.semana, d = CONFIG.horario.domingo;
+    $('#horario-hoje').textContent = 'Seg a sáb, ' + curto(s.abre) + ' às ' + curto(s.fecha);
+    $('#horario-outro').textContent = 'Domingo, ' + curto(d.abre) + ' às ' + curto(d.fecha);
+
+    momentoAtual = momento;
+    const cfg = CONFIG.momentos[momento];
+    $('#hero-titulo').textContent = cfg.titulo;
+    if (typeof trocarFotoHero === 'function') trocarFotoHero();
+  }
+  atualizar();
+  setInterval(atualizar, 60000);
+
+  /* ---------- TEXTOS EDITADOS NO PAINEL ---------- */
+  function carregarTextos(chave, aplicar){
+    const fim = () => document.documentElement.classList.remove("textos-carregando");
+    const limite = setTimeout(fim, 1000);
+    fetch("https://firestore.googleapis.com/v1/projects/" + FB_TEXTOS.projectId + "/databases/(default)/documents/vitrine/config-textos?mask.fieldPaths=" + chave + "&key=" + FB_TEXTOS.apiKey)
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        const f = j && j.fields && j.fields[chave] && j.fields[chave].mapValue && j.fields[chave].mapValue.fields;
+        if (f) { const o = {}; Object.keys(f).forEach(k => { if (f[k].stringValue) o[k] = f[k].stringValue; }); aplicar(o); }
+      })
+      .catch(() => {})
+      .finally(() => { clearTimeout(limite); fim(); });
+  }
+  
+  const FB_TEXTOS = CONFIG.firebase;
+  carregarTextos("home", o => {
+    ["manha", "almoco", "tarde", "noite", "fechado"].forEach(k => { if (o[k]) CONFIG.momentos[k].titulo = o[k]; });
+    if (o.subtitulo) document.querySelector(".hero-sub").textContent = o.subtitulo;
+    atualizar();
+  });
+
+  // Linha sob o cabecalho ao rolar
+  const cab = $('#cabecalho');
+  const aoRolar = () => cab.classList.toggle('rolado', window.scrollY > 10);
+  window.addEventListener('scroll', aoRolar, {passive: true});
+  aoRolar();
+
+  // Avaliacoes na lateral em telas largas
+  const secAval = $('#avaliacoes'), lateral = $('#lateral'), secKits = $('#kits');
+  const telaLarga = window.matchMedia('(min-width:1500px)');
+  const celular = window.matchMedia('(max-width:719px)');
+  const posicionarAval = () => {
+    if (telaLarga.matches) { if (secAval.parentNode !== lateral) lateral.appendChild(secAval); }
+    else secKits.parentNode.insertBefore(secAval, secKits.nextSibling);
+  };
+  posicionarAval();
+  document.querySelectorAll('a[href="#avaliacoes"]').forEach(l => l.addEventListener('click', e => {
+    if (telaLarga.matches) { e.preventDefault(); lateral.scrollTo({top: 0, behavior: 'smooth'}); }
+  }));
+  [telaLarga, celular].forEach(m => m.addEventListener ? m.addEventListener('change', posicionarAval) : m.addListener(posicionarAval));
+
+  // Menu do celular
+  const menuBtn = $('#menu-btn');
+  const alternarMenu = abrir => {
+    cab.classList.toggle('menu-aberto', abrir);
+    menuBtn.setAttribute('aria-expanded', abrir);
+    menuBtn.setAttribute('aria-label', abrir ? 'Fechar menu' : 'Abrir menu');
+  };
+  menuBtn.onclick = () => alternarMenu(!cab.classList.contains('menu-aberto'));
+  document.querySelectorAll('.menu-celular a').forEach(a => a.addEventListener('click', () => alternarMenu(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') alternarMenu(false); });
+
+})();
+</script>
+</body>
+</html>
