@@ -128,7 +128,7 @@ h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;line-height:1.1;font-op
 .grade{display:grid;grid-template-columns:1fr;gap:1rem}
 
 
-.torta{background:var(--branco);border:1px solid var(--linha);border-radius:20px;overflow:hidden;text-align:left;cursor:pointer;display:flex;flex-direction:column;padding:0;transition:transform .25s ease,box-shadow .25s ease}
+.torta{background:var(--branco);border:1px solid var(--linha);border-radius:20px;overflow:hidden;text-align:left;text-decoration:none;color:inherit;cursor:pointer;display:flex;flex-direction:column;padding:0;transition:transform .25s ease,box-shadow .25s ease}
 .torta:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(19,33,94,.35)}
 .torta-foto{aspect-ratio:4/3;width:100%;object-fit:cover;background:var(--creme)}
 .sem-foto{aspect-ratio:4/3;width:100%;display:grid;place-items:center;background:var(--creme);color:var(--dourado)}
@@ -1105,7 +1105,7 @@ $("limpar-busca").onclick = () => { $("busca").value = ""; $("limpar-busca").cla
 function cartao(t, i, dec){
   const foto = fotosDe(t)[dec ? dec - 1 : 0];
   return `
-    <button type="button" class="torta" onclick="abrirDetalhe(${i}${dec ? ", " + dec : ""})">
+    <a class="torta" href="?produto=${encodeURIComponent(slug(t.nome))}" onclick="event.preventDefault(); abrirDetalhe(${i}${dec ? ", " + dec : ""})">
       ${foto ? (dec ? `<div class="foto-deco"><img class="torta-foto" src="${esc(foto)}" alt="${esc(t.nome)}, decoração ${dec}"><span class="tag-deco">Decoração ${dec}</span></div>` : `<img class="torta-foto" src="${esc(foto)}" alt="${esc(t.nome)}">`) : fotosCache[t.id] ? `<div class="sem-foto">${ICONE_BOLO}</div>` : `<div class="torta-foto carregando" data-i="${i}" aria-hidden="true"></div>`}
       <div class="torta-info">
         <h3>${esc(t.nome)}</h3>
@@ -1113,7 +1113,7 @@ function cartao(t, i, dec){
         ${precoTexto(t) ? `<span class="torta-preco">${esc(precoTexto(t))}</span>` : ""}
         <span class="torta-ver"><span class="tv-longo">Ver e encomendar</span><span class="tv-curto">Encomendar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span>
       </div>
-    </button>`;
+    </a>`;
 }
 /* Pagina unica: todas as categorias em sequencia, cada uma com uma faixa e a lista de produtos.
    O menu do rodape leva a cada secao e acompanha a rolagem. */
