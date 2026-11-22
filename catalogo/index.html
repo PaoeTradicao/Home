@@ -975,18 +975,12 @@ function ofertasParaGoogle(t){
   const p = precos(t);
   const criarOferta = (nome, valor, unidade) => {
     if (!(Number(valor) > 0)) return null;
-    const oferta = {
-      "@type": "Offer", name: nome,
-      price: Number(valor), priceCurrency: "BRL"
+    return {
+      "@type": "Offer",
+      name: nome,
+      price: Number(valor).toFixed(2),
+      priceCurrency: "BRL"
     };
-    if (unidade === "kg") {
-      oferta.priceSpecification = {
-        "@type": "UnitPriceSpecification",
-        price: Number(valor), priceCurrency: "BRL",
-        referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitCode: "KGM", unitText: "kg" }
-      };
-    }
-    return oferta;
   };
   if (porReceita(t)) {
     return [
