@@ -969,9 +969,63 @@ function dadosParaGoogle(){
   let s = document.getElementById("ld-catalogo");
   if (!s) { s = document.createElement("script"); s.type = "application/ld+json"; s.id = "ld-catalogo"; document.head.appendChild(s); }
   s.textContent = JSON.stringify({
-    "@context": "https://schema.org", "@type": "ItemList", name: document.title,
-    itemListElement: tortas.map((t, k) => ({ "@type": "ListItem", position: k + 1, item: { "@type": "Thing", name: t.nome, description: t.descricao || undefined, category: t.categoria || undefined, brand: { "@type": "Brand", name: "Pão & Tradição" } } }))
+    "@context": "https://schema.org", "@type": "ItemList", name: "Catálogo de encomendas | Pão & Tradição",
+    itemListElement: tortas.map((t, k) => ({
+      "@type": "ListItem", position: k + 1,
+      item: {
+        "@type": "Product", name: t.nome, description: t.descricao || undefined,
+        category: t.categoria || undefined, image: fotosDe(t)[0] ? new URL(fotosDe(t)[0], location.href).href : undefined,
+        url: location.origin + location.pathname + "?produto=" + encodeURIComponent(slug(t.nome)),
+        brand: { "@type": "Brand", name: "Pão & Tradição" }
+      }
+    }))
   });
+}
+function metaSEO(selector, attr, value){
+  let el = document.querySelector(selector);
+  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, selector.includes('property=') ? selector.match(/property="([^"]+)"/)[1] : selector.match(/name="([^"]+)"/)[1]); document.head.appendChild(el); }
+  el.setAttribute("content", value || "");
+}
+const SEO_CATALOGO = {
+  title: "Catálogo de encomendas | Pão & Tradição",
+  description: "Catálogo de encomendas da Pão & Tradição em Nova Friburgo: tortas, bolos, pães e mais, com fotos, descrição e encomenda pelo WhatsApp.",
+  url: "https://www.padariapaoetradicao.com.br/catalogo/",
+  image: "https://www.padariapaoetradicao.com.br/img/compartilhar.jpg"
+};
+function atualizarSeoProduto(t){
+  if (!t) return;
+  const url = location.origin + location.pathname + "?produto=" + encodeURIComponent(slug(t.nome));
+  const descricao = (t.descricao || (t.categoria ? t.nome + " — " + t.categoria : t.nome) + " disponível para encomenda na Pão & Tradição, em Nova Friburgo.").replace(/\s+/g, " ").trim().slice(0, 160);
+  const imagem = fotosDe(t)[0] ? new URL(fotosDe(t)[0], location.href).href : SEO_CATALOGO.image;
+  const titulo = t.nome + " | Encomendas Pão & Tradição";
+  document.title = titulo;
+  metaSEO('meta[name="description"]', "name", descricao);
+  metaSEO('meta[property="og:title"]', "property", titulo);
+  metaSEO('meta[property="og:description"]', "property", descricao);
+  metaSEO('meta[property="og:url"]', "property", url);
+  metaSEO('meta[property="og:image"]', "property", imagem);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.href = url;
+  let ld = document.getElementById("ld-produto");
+  if (!ld) { ld = document.createElement("script"); ld.type = "application/ld+json"; ld.id = "ld-produto"; document.head.appendChild(ld); }
+  ld.textContent = JSON.stringify({
+    "@context": "https://schema.org", "@type": "Product",
+    name: t.nome, description: descricao, image: fotosDe(t).map(x => new URL(x, location.href).href),
+    category: t.categoria || undefined, sku: t.id || undefined, url,
+    brand: { "@type": "Brand", name: "Pão & Tradição" }
+  });
+}
+function restaurarSeoCatalogo(){
+  document.title = SEO_CATALOGO.title;
+  metaSEO('meta[name="description"]', "name", SEO_CATALOGO.description);
+  metaSEO('meta[property="og:title"]', "property", SEO_CATALOGO.title);
+  metaSEO('meta[property="og:description"]', "property", "Encomende tortas, bolos, doces, pães e salgados na Pão & Tradição. Confira as opções, escolha quantidades e envie sua encomenda pelo WhatsApp.");
+  metaSEO('meta[property="og:url"]', "property", SEO_CATALOGO.url);
+  metaSEO('meta[property="og:image"]', "property", SEO_CATALOGO.image);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.href = SEO_CATALOGO.url;
+  const ld = document.getElementById("ld-produto");
+  if (ld) ld.remove();
 }
 
 /* ---------- CATEGORIAS: tela inicial com 4 grupos ---------- */
@@ -1020,16 +1074,21 @@ function gruposVisiveis(){
   return g;
 }
 let grupoAtual = "";
-// Link direto para um produto: /catalogo/#produto/torta-de-kitkat
+// Link individual e indexavel: /catalogo/?produto=nome-do-produto
+// Links antigos com #produto/ continuam funcionando.
 const slug = s => norm(s).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-let produtoPendente = decodeURIComponent((location.hash.match(/^#produto\/(.+)$/) || [])[1] || "");
+const produtoDaUrl = () => new URLSearchParams(location.search).get("produto") || decodeURIComponent((location.hash.match(/^#produto\/(.+)$/) || [])[1] || "");
+let produtoPendente = produtoDaUrl();
 function abrirProdutoPendente(){
   if (!produtoPendente) return;
   const i = tortas.findIndex(t => slug(t.nome) === produtoPendente);
   produtoPendente = "";
-  if (i < 0) { history.replaceState(null, "", location.pathname + location.search); grupoAtual = ""; desenhar(); return; }
+  const url = new URL(location.href);
+  url.searchParams.delete("produto");
+  url.hash = "";
+  history.replaceState(null, "", url.pathname + url.search);
+  if (i < 0) { grupoAtual = ""; desenhar(); restaurarSeoCatalogo(); return; }
   const k = grupoDe(tortas[i]);
-  history.replaceState(null, "", location.pathname + location.search);
   desenhar(); irPara(k, true);
   abrirDetalhe(i);
 }
@@ -1268,7 +1327,7 @@ function abrirDetalhe(i, dec){
   if (!fotosCache[t.id]) carregarFotos(t).then(f => {
     if (atual !== t) return;
     if (f === null) { $("d-foto").innerHTML = `<div class="sem-foto">${ICONE_BOLO}</div>`; return; }
-    montarFotosDetalhe(t); aplicarDecoInicial();
+    montarFotosDetalhe(t); aplicarDecoInicial(); atualizarSeoProduto(t);
   });
   $("d-cat").textContent = t.categoria || "";
   $("d-nome").textContent = t.nome;
@@ -1319,7 +1378,13 @@ function abrirDetalhe(i, dec){
   $("detalhe").classList.add("aberto");
   requestAnimationFrame(aplicarDecoInicial);
   document.body.style.overflow = "hidden";
-  if (!history.state || !history.state.torta) history.pushState({ torta: 1 }, "", "#produto/" + slug(t.nome));
+  if (!history.state || !history.state.torta) {
+    const url = new URL(location.href);
+    url.searchParams.set("produto", slug(t.nome));
+    url.hash = "";
+    history.pushState({ torta: 1 }, "", url.pathname + url.search);
+  }
+  atualizarSeoProduto(t);
   $("janela-rolagem").scrollTop = 0; $("janela-rolagem").querySelector(".janela-corpo").scrollTop = 0;
 }
 /* ---------- CALCULADORA E ENCOMENDA ---------- */
@@ -1579,14 +1644,20 @@ function fecharDetalhe(doVoltar){
 }
 // Botao voltar do celular fecha a torta em vez de sair da pagina
 window.addEventListener("popstate", () => {
-  // link de produto aberto com a pagina ja carregada
+  // Avancar novamente para um produto restaura o detalhe sem recarregar a pagina.
+  const produtoAtualUrl = new URLSearchParams(location.search).get("produto");
+  if (produtoAtualUrl && history.state && history.state.torta && tortas.length) {
+    const i = tortas.findIndex(t => slug(t.nome) === produtoAtualUrl);
+    if (i >= 0 && !$("detalhe").classList.contains("aberto")) { abrirDetalhe(i); return; }
+  }
+  // Compatibilidade com links antigos no formato #produto/nome.
   const mp = !history.state && location.hash.match(/^#produto\/(.+)$/);
   if (mp && tortas.length) { fecharDetalhe(true); fecharPedido(true); produtoPendente = decodeURIComponent(mp[1]); abrirProdutoPendente(); return; }
   // voltar na etapa 2 retorna para as informacoes do produto
   if ($("detalhe").classList.contains("etapa2") && history.state && history.state.torta && !history.state.etapa) {
     $("detalhe").classList.remove("etapa2"); $("e-erro").textContent = ""; return;
   }
-  fecharDetalhe(true); fecharPedido(true);
+  fecharDetalhe(true); fecharPedido(true); restaurarSeoCatalogo();
   if (abrirPedidoDepois) { abrirPedidoDepois = false; abrirPedido(); }
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape") { fecharDetalhe(); fecharPedido(); fecharEnviado(); } });
