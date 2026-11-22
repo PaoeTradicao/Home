@@ -965,6 +965,47 @@ function observarFotos(){
   vagas.forEach(v => observadorFotos.observe(v));
 }
 // Nomes e descricoes em formato que o Google le (dados estruturados)
+// Gera ofertas somente com preços realmente cadastrados no produto/configuração.
+function ofertasParaGoogle(t){
+  const p = precos(t);
+  const criarOferta = (nome, valor, unidade) => {
+    if (!(Number(valor) > 0)) return null;
+    const oferta = {
+      "@type": "Offer", name: nome,
+      price: Number(valor), priceCurrency: "BRL"
+    };
+    if (unidade === "kg") {
+      oferta.priceSpecification = {
+        "@type": "UnitPriceSpecification",
+        price: Number(valor), priceCurrency: "BRL",
+        referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitCode: "KGM", unitText: "kg" }
+      };
+    }
+    return oferta;
+  };
+  if (porReceita(t)) {
+    return [
+      criarOferta("Receita inteira", p.inteira),
+      criarOferta("Meia receita", p.meia)
+    ].filter(Boolean);
+  }
+  if (t.venda === "fatia") return [criarOferta("Por fatia", p.fatia)].filter(Boolean);
+  if (t.venda === "unidade") return [criarOferta("Por unidade", p.unidade)].filter(Boolean);
+  return [criarOferta("Por kg", p.kg, "kg")].filter(Boolean);
+}
+function produtoParaGoogle(t){
+  const ofertas = ofertasParaGoogle(t);
+  const produto = {
+    "@type": ofertas.length ? "Product" : "Thing",
+    name: t.nome, description: t.descricao || undefined,
+    category: t.categoria || undefined,
+    image: fotosDe(t)[0] ? new URL(fotosDe(t)[0], location.href).href : undefined,
+    url: location.origin + location.pathname + "?produto=" + encodeURIComponent(slug(t.nome)),
+    brand: { "@type": "Brand", name: "Pão & Tradição" }
+  };
+  if (ofertas.length) produto.offers = ofertas;
+  return produto;
+}
 function dadosParaGoogle(){
   let s = document.getElementById("ld-catalogo");
   if (!s) { s = document.createElement("script"); s.type = "application/ld+json"; s.id = "ld-catalogo"; document.head.appendChild(s); }
@@ -972,12 +1013,7 @@ function dadosParaGoogle(){
     "@context": "https://schema.org", "@type": "ItemList", name: "Catálogo de encomendas | Pão & Tradição",
     itemListElement: tortas.map((t, k) => ({
       "@type": "ListItem", position: k + 1,
-      item: {
-        "@type": "Product", name: t.nome, description: t.descricao || undefined,
-        category: t.categoria || undefined, image: fotosDe(t)[0] ? new URL(fotosDe(t)[0], location.href).href : undefined,
-        url: location.origin + location.pathname + "?produto=" + encodeURIComponent(slug(t.nome)),
-        brand: { "@type": "Brand", name: "Pão & Tradição" }
-      }
+      item: produtoParaGoogle(t)
     }))
   });
 }
@@ -1008,11 +1044,14 @@ function atualizarSeoProduto(t){
   if (canonical) canonical.href = url;
   let ld = document.getElementById("ld-produto");
   if (!ld) { ld = document.createElement("script"); ld.type = "application/ld+json"; ld.id = "ld-produto"; document.head.appendChild(ld); }
+  const ofertas = ofertasParaGoogle(t);
+  if (!ofertas.length) { ld.remove(); return; }
   ld.textContent = JSON.stringify({
     "@context": "https://schema.org", "@type": "Product",
     name: t.nome, description: descricao, image: fotosDe(t).map(x => new URL(x, location.href).href),
     category: t.categoria || undefined, sku: t.id || undefined, url,
-    brand: { "@type": "Brand", name: "Pão & Tradição" }
+    brand: { "@type": "Brand", name: "Pão & Tradição" },
+    offers: ofertas
   });
 }
 function restaurarSeoCatalogo(){
