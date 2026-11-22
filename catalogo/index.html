@@ -899,6 +899,11 @@ function carregarFotos(t){
 function guardarFotos(id, f){
   fotosCache[id] = f;
   tortas.forEach(x => { if (x.id === id) x.imagens = f; });
+  // As fotos são carregadas sob demanda; atualiza os dados estruturados após recebê-las.
+  if (Array.isArray(f) && f.length && typeof dadosParaGoogle === "function" && tortas.length) {
+    dadosParaGoogle();
+    if (atual && atual.id === id && $("detalhe").classList.contains("aberto")) atualizarSeoProduto(atual);
+  }
 }
 function fotoAvulsa(t){
   return buscar(BASE_FS + "/vitrine/" + t.id + "?mask.fieldPaths=imagens&mask.fieldPaths=imagem&key=" + FIREBASE.apiKey, null, 20000)
